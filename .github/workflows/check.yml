@@ -4,9 +4,7 @@ on:
     inputs:
       distinct_id:
   workflow_call:
-    secrets:
-      token:
-        required: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
