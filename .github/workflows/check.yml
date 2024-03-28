@@ -11,8 +11,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: test
     env:
-      test
+       key: '${{secrets.BASE_REPO}}'
     steps:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: echo ${{ github.event.inputs.distinct_id }}
@@ -30,7 +31,7 @@ jobs:
           path: 'dest'
           ref: 'main'
           repository: 'leol0ps/backup-tcc'
-          token: '${{ env.HUBTOKEN }}'
+          token: '${{ env.key}}'
           persist-credentials: true
 
       - name: UpCount
