@@ -28,7 +28,7 @@ jobs:
           path: 'dest'
           ref: 'main'
           repository: 'leol0ps/backup-tcc'
-          token: '${{ secrets.BASE_REPO }}'
+          token: '${{ env.HUBTOKEN }}'
           persist-credentials: true
 
       - name: UpCount
