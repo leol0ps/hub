@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: test
     env:
-       key: '${{env.HUBTOKEN}}'
+       key: '${{secrets.HUBTOKEN}}'
     steps:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: echo ${{ github.event.inputs.distinct_id }}
