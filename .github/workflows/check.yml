@@ -28,9 +28,6 @@ jobs:
       - name: UpCount
         shell: bash
         run: |
-         mkdir -p dest/backup 
-         diff src/backup/file.txt dest/backup
-         cd dest
          DIFF=$(diff src/backup/file.txt est/backup/file.txt)
          if [ "$DIFF" != "" ] 
             then
