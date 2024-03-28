@@ -1,0 +1,12 @@
+name: action-test
+on:
+  workflow_dispatch:
+    inputs:
+      distinct_id:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
+        run: echo ${{ github.event.inputs.distinct_id }}
