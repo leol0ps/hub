@@ -8,7 +8,32 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
-        run: echo ${{ github.event.inputs.distinct_id }}
-      - name: fail
-        run: exit 1
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: 'src'
+          ref: 'main'
+          token: '${{ github.token }}'
+          persist-credentials: true
+
+      - name: Checkout2
+        uses: actions/checkout@v3
+        with:
+          path: 'dest'
+          ref: 'main'
+          repository: 'leol0ps/backup-tcc'
+          token: '${{ secrets.BASE_REPO }}'
+          persist-credentials: true
+
+      - name: UpCount
+        shell: bash
+        run: |
+         mkdir -p dest/backup 
+         diff src/backup/file.txt dest/backup
+         cd dest
+         DIFF=$(diff src/backup/file.txt est/backup/file.txt)
+         if [ "$DIFF" != "" ] 
+            then
+                run: exit 1
+          fi
+        
