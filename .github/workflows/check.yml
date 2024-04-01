@@ -7,6 +7,13 @@ on:
     secrets:
       token: 
         required: true
+      email:
+        required: true
+      user:
+        required: true
+      repo:
+        required: true
+        
 
 jobs:
   test:
