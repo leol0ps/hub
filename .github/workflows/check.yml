@@ -27,7 +27,7 @@ jobs:
           path: 'src'
           ref: 'main'
           repository: '${{env.REP}}'
-          token: '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'
+          token: 
           persist-credentials: true
 
       - name: Checkout2
