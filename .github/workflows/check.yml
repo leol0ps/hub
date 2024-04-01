@@ -4,6 +4,7 @@ on:
     inputs:
       distinct_id:
       email:
+      repo:
       user:
       
         
