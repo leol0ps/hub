@@ -3,24 +3,15 @@ on:
   workflow_dispatch:
     inputs:
       distinct_id:
-  workflow_call:
-    secrets:
-      token: 
-        required: true
       email:
-        required: true
-      user:
-        required: true
       repo:
-        required: true
+      user:
+      
         
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: test
-    env:
-       key: '${{secrets.HUBTOKEN}}'
     steps:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: echo ${{ github.event.inputs.distinct_id }}
@@ -38,7 +29,7 @@ jobs:
           path: 'dest'
           ref: 'main'
           repository: 'leol0ps/backup-tcc'
-          token: '${{ env.key}}'
+          token: '${{ secrets.BASE_REPO}}'
           persist-credentials: true
 
       - name: UpCount
