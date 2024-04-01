@@ -4,7 +4,6 @@ on:
     inputs:
       distinct_id:
       email:
-      repo:
       user:
       
         
@@ -20,6 +19,7 @@ jobs:
         with:
           path: 'src'
           ref: 'main'
+          repository: '&{{github.event.inputs.repo}}'
           token: '${{ secrets.token }}'
           persist-credentials: true
 
