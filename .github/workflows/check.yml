@@ -12,6 +12,10 @@ on:
       token:
         
   workflow_call:
+    inputs:
+      repo:
+      user:
+      email:
     secrets: inherit
 
 jobs:
@@ -21,15 +25,13 @@ jobs:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: |
           echo ${{ github.event.inputs.distinct_id }}
-          echo ${{github.event.inputs.repo}}
-          echo ${{env.TOK}}
       - name: Checkout
         uses: actions/checkout@v3
         with:
           path: 'src'
           ref: 'main'
-          repository: '${{env.REP}}'
-          token: 
+          repository: '${{github.event.inputs.repo}'
+          token: '{{secrets.token}}'
           persist-credentials: true
 
       - name: Checkout2
