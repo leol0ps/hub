@@ -1,6 +1,8 @@
 name: action-test
 on:
   workflow_dispatch:
+    env:
+      REP: '&{{github.event.inputs.repo}}'
     inputs:
       distinct_id:
       email:
@@ -22,7 +24,7 @@ jobs:
         with:
           path: 'src'
           ref: 'main'
-          repository: '&{{github.event.inputs.repo}}'
+          repository: '${{env.REP}}'
           token: '${{ secrets.token }}'
           persist-credentials: true
 
