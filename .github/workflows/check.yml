@@ -26,7 +26,7 @@ jobs:
           path: 'src'
           ref: 'main'
           repository: '${{env.REP}}'
-          token: '${{ secrets.token }}'
+          token: '${{ env.TOK }}'
           persist-credentials: true
 
       - name: Checkout2
