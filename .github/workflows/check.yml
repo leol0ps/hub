@@ -1,4 +1,4 @@
-name: action-test
+v.name: action-test
 on:
   workflow_dispatch:
     env:
@@ -20,7 +20,7 @@ jobs:
         run: |
           echo ${{ github.event.inputs.distinct_id }}
           echo ${{github.event.inputs.repo}}
-          echo ${{github.event.inputs.token}}
+          echo ${{env.TOK}}
       - name: Checkout
         uses: actions/checkout@v3
         with:
