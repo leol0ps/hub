@@ -3,12 +3,13 @@ on:
   workflow_dispatch:
     env:
       REP: '&{{github.event.inputs.repo}}'
+      TOK: '&{{github.event.inputs.token}}'
     inputs:
       distinct_id:
       email:
       repo:
       user:
-      
+      token:
         
 
 jobs:
