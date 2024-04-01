@@ -11,6 +11,8 @@ on:
       user:
       token:
         
+  workflow_call:
+    secrets: inherit
 
 jobs:
   test:
