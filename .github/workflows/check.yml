@@ -1,4 +1,4 @@
-v.name: action-test
+name: action-test
 on:
   workflow_dispatch:
     env:
