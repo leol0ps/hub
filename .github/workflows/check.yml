@@ -14,15 +14,11 @@ on:
   workflow_call:
     inputs:
       repo: 
-        required: true
       user: 
-        required: true
-
       email: 
-        required: true
-    secrets:
-      PAT:
-        required: true
+      secrets:
+        PAT:
+
 jobs:
   test:
     runs-on: ubuntu-latest
