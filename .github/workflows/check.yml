@@ -20,9 +20,9 @@ on:
 
       email: 
         required: true
-      secrets:
-        PAT:
-          required: true
+    secrets:
+      PAT:
+        required: true
 jobs:
   test:
     runs-on: ubuntu-latest
