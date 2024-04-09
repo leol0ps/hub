@@ -21,6 +21,7 @@ on:
         type: string
       secrets:
         PAT:
+          type: string
 
 jobs:
   test:
