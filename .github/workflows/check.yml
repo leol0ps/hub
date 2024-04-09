@@ -28,14 +28,17 @@ jobs:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: |
           echo ${{ github.event.inputs.distinct_id }}
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          path: 'src'
-          ref: 'main'
-          repository: '${{github.event.inputs.repo}}'
-          token: '{{secrets.token}}'
-          persist-credentials: true
+          echo https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
+          git clone https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
+
+      #- name: Checkout
+      #  uses: actions/checkout@v3
+      #  with:
+      #    path: 'src'
+      #    ref: 'main'
+      #    repository: '${{github.event.inputs.repo}}'
+      #    token: '{{secrets.token}}'
+      #    persist-credentials: true
 
       - name: Checkout2
         uses: actions/checkout@v3
