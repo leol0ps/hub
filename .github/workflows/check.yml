@@ -20,7 +20,9 @@ on:
 
       email: 
         required: true
-
+    secrets:
+        token:
+          required: true
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,7 +31,7 @@ jobs:
         run: |
           echo ${{ github.event.inputs.distinct_id }}
           echo https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
-          git clone https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
+          git clone https://${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}.git
           ls
 
       #- name: Checkout
