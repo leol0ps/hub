@@ -20,7 +20,8 @@ on:
 
       email: 
         required: true
-      token:
+      secrets:
+        PAT:
           required: true
 jobs:
   test:
