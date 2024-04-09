@@ -12,8 +12,8 @@ on:
         type: string
       user:
         type: string
-    secrets:
-      PAT:        
+      token:
+        
   workflow_call:
     inputs:
       repo: 
@@ -22,8 +22,6 @@ on:
         type: string
       email: 
         type: string
-    secrets:
-      PAT:
 
 jobs:
   test:
