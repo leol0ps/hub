@@ -13,10 +13,13 @@ on:
         
   workflow_call:
     inputs:
-      repo:
-      user:
-      email:
-    secrets: inherit
+      repo: 
+        required: true
+      user: 
+        required: true
+
+      email: 
+        required: true
 
 jobs:
   test:
@@ -30,7 +33,7 @@ jobs:
         with:
           path: 'src'
           ref: 'main'
-          repository: '${{github.event.inputs.repo}'
+          repository: '${{github.event.inputs.repo}}'
           token: '{{secrets.token}}'
           persist-credentials: true
 
