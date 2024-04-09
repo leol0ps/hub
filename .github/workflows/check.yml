@@ -14,8 +14,11 @@ on:
   workflow_call:
     inputs:
       repo: 
+        type: string
       user: 
+        type: string
       email: 
+        type: string
       secrets:
         PAT:
 
