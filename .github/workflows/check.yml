@@ -7,10 +7,13 @@ on:
     inputs:
       distinct_id:
       email:
+        type: string
       repo:
+        type: string
       user:
-      token:
-        
+        type: string
+    secrets:
+      PAT:        
   workflow_call:
     inputs:
       repo: 
