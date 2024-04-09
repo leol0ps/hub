@@ -30,6 +30,7 @@ jobs:
           echo ${{ github.event.inputs.distinct_id }}
           echo https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
           git clone https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
+          ls
 
       #- name: Checkout
       #  uses: actions/checkout@v3
