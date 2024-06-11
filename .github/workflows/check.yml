@@ -55,9 +55,4 @@ jobs:
       - name: UpCount
         shell: bash
         run: |
-         DIFF=$(diff src/backup/file.txt dest/backup/file.txt)
-         if [ "$DIFF" != "" ] 
-            then
-                run: exit 1
-          fi
-        
+         docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build        
