@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: echo repo
+        run: echo ${{github.event.inputs.repo}} 
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -53,7 +55,7 @@ jobs:
           npx playwright test > log.txt
           git config --global user.name=leol0ps
           git config --global user.email=leotimao2@hotmail.com
-          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
           git add log.txt
           git commit -m "answer"
           git push
