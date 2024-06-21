@@ -9,7 +9,7 @@ const hours = now.getHours();
 const minutes = now.getMinutes();
 var check = "Not answered yet"
 var tst = true
-const selectors = ['YES', 'NO - Compilation error','NO - Runtime error', 'NO - Time limit exceeded', 'NO - Presentation error', 'NO - Wrong answer', 'NO - Contact staff' ]
+const selectors = ['YES', 'NO - Compilation error', 'NO - Runtime error', 'NO - Time limit exceeded', 'NO - Presentation error', 'NO - Wrong answer', 'NO - Contact staff']
 test('test', async ({ page }) => {
   test.setTimeout(150_000);
   await page.goto('https://demo.playwright.dev/todomvc/');
@@ -29,7 +29,7 @@ test('test', async ({ page }) => {
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
-  
+
   });
   await page.getByRole('button', { name: 'Activate' }).click();
 
@@ -48,7 +48,7 @@ test('test', async ({ page }) => {
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
-  
+
   });
   await page.getByRole('button', { name: 'Send' }).click();
   await page.getByRole('link', { name: 'Users' }).click();
@@ -85,24 +85,61 @@ test('test', async ({ page }) => {
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Send' }).click();
-  while(tst){  
-    try{
-      const z = await page.waitForSelector('text="Not answered yet"',{timeout: 2000}) //locator('Not answered yet').first();
-    }catch(error){
-        tst = false
+  while (tst) {
+    try {
+      const z = await page.waitForSelector('text="Not answered yet"', { timeout: 2000 }) //locator('Not answered yet').first();
+    } catch (error) {
+      tst = false
     }
-      await new Promise(resolve => setTimeout(resolve,3000));
-      await page.goto('http://localhost:8000/boca/team/run.php');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    await page.goto('http://localhost:8000/boca/team/run.php');
   }
-  for (const selector of selectors){
-    const element = page.locator(`//text()[contains(., ${selector})]`).first()
-    if(element){
-        console.log(selector);
-        break;
-    }
+  try {
+    await page.waitForSelector('text="NO - Contact staff" ', { timeout: 1000 });
+    console.log(`Found "NO - Contact staff" on the page.`);
+  } catch (error) {
+  
+  }
+  try {
+    await page.waitForSelector('text="NO - Wrong answer" ', { timeout: 1000 });
+    console.log(`Found "NO - Wrong answer" on the page.`);
+  } catch (error) {
+  
+  }
+  try {
+    await page.waitForSelector('text="NO - Compilation error" ', { timeout: 1000 });
+    console.log(`Found "NO - Compilation error" on the page.`);
+  } catch (error) {
+  }
+  try {
+    await page.waitForSelector('text="YES" ', { timeout: 1000 });
+    console.log(`Found "YES" on the page.`);
+  } catch (error) {
+  }
+  try {
+    await page.waitForSelector('text="NO - Time limit exceeded" ', { timeout: 1000 });
+    console.log(`Found "NO - Time limit exceeded" on the page.`);
+  } catch (error) {
+  }
+  try {
+    await page.waitForSelector('text="NO - Runtime error" ', { timeout: 1000 });
+    console.log(`Found "NO - Runtime error" on the page.`);
+  } catch (error) {
+  }
+  try {
+    await page.waitForSelector('text="NO - Presentation error" ', { timeout: 1000 });
+    console.log(`Found "NO - Presentation error" on the page.`);
+  } catch (error) {
+  }
+  // for (const selector of selectors){
+  //   try {
+  //     await page.waitForSelector(`'text= ${selector}'`, {timeout: 1000 });
+  //     console.log(`Found "${selector}" on the page.`);
+  // } catch (error) {
+  //     console.log(`"${selector}" not found on the page within timeout.`);
+  // }
 
-  }
-  console.log("dsadsa");
+  // }
 
   await page.getByRole('link', { name: 'Logout' }).click();
 });
