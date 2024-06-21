@@ -44,7 +44,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="problemname"]').click();
   await page.locator('input[name="problemname"]').fill('das');
   await page.locator('input[name="probleminput"]').click();
-  await page.locator('input[name="probleminput"]').setInputFiles('/home/leo/abacaxipath/abacaxi.zip');
+  await page.locator('input[name="probleminput"]').setInputFiles('L1.zip');
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
@@ -53,7 +53,7 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Send' }).click();
   await page.getByRole('link', { name: 'Users' }).click();
   await page.locator('input[name="importfile"]').click();
-  await page.locator('input[name="importfile"]').setInputFiles('/home/leo/abacaxipath/user.txt');
+  await page.locator('input[name="importfile"]').setInputFiles('user.txt');
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
@@ -79,7 +79,7 @@ test('test', async ({ page }) => {
   await page.locator('select[name="problem"]').selectOption('5');
   await page.locator('select[name="language"]').selectOption('1');
   await page.getByRole('textbox').click();
-  await page.getByRole('textbox').setInputFiles('/home/leo/answer/ans.c');
+  await page.getByRole('textbox').setInputFiles('ans.c');
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();

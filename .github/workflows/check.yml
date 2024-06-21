@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     env:
       REP: '&{{github.event.inputs.repo}}'
-      TOK: '&{{github.event.inputs.token}}'
+      #TOK: '&{{github.event.inputs.token}}'
     inputs:
       distinct_id:
       email:
@@ -26,33 +26,42 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    steps:
-      - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
-        run: |
-          echo ${{ github.event.inputs.distinct_id }}
-          echo https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
-          git clone https://${{ github.event.inputs.token }}@github.com/${{ github.event.inputs.repo }}.git
-          ls
 
-      #- name: Checkout
-      #  uses: actions/checkout@v3
-      #  with:
-      #    path: 'src'
-      #    ref: 'main'
-      #    repository: '${{github.event.inputs.repo}}'
-      #    token: '{{secrets.token}}'
-      #    persist-credentials: true
+    steps:
+      - name: Checkout
+       uses: actions/checkout@v3
+       with:
+         path: 'student'
+         ref: 'main'
+         repository: '${{github.event.inputs.repo}}'
+         token: '{{secrets.token}}'
+         persist-credentials: true
 
       - name: Checkout2
         uses: actions/checkout@v3
         with:
-          path: 'dest'
+          path: 'problem'
           ref: 'main'
           repository: 'leol0ps/backup-tcc'
           token: '${{ secrets.BASE_REPO}}'
           persist-credentials: true
-
-      - name: UpCount
+      - name: Updocker
         shell: bash
         run: |
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d    
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: | 
+          cp student/ans.c problem
+          npx playwright test > log.txt
+          git config --global user.name=leol0ps
+          git config --global user.email=leotimao2@hotmail.com
+          git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.repository }}
+          git add log.txt
+          git commit -m "answer"
+          git push
+      
+
