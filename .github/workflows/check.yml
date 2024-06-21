@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
            path: 'student'
            ref: 'main'
@@ -32,7 +32,7 @@ jobs:
            persist-credentials: true
 
       - name: Checkout2
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: 'problem'
           ref: 'main'
