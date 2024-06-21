@@ -6,14 +6,6 @@ on:
       #TOK: '&{{github.event.inputs.token}}'
     inputs:
       distinct_id:
-      email:
-        type: string
-      repo:
-        type: string
-      user:
-        type: string
-      token:
-        
   workflow_call:
     inputs:
       repo: 
@@ -29,13 +21,13 @@ jobs:
 
     steps:
       - name: Checkout
-       uses: actions/checkout@v3
-       with:
-         path: 'student'
-         ref: 'main'
-         repository: '${{github.event.inputs.repo}}'
-         token: '{{secrets.token}}'
-         persist-credentials: true
+        uses: actions/checkout@v3
+        with:
+           path: 'student'
+           ref: 'main'
+           repository: '${{github.event.inputs.repo}}'
+           token: '{{secrets.token}}'
+           persist-credentials: true
 
       - name: Checkout2
         uses: actions/checkout@v3
