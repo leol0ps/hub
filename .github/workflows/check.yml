@@ -6,6 +6,8 @@ on:
       #TOK: '&{{github.event.inputs.token}}'
     inputs:
       distinct_id:
+      repo:
+        type: string
   workflow_call:
     inputs:
       repo: 
