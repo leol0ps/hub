@@ -29,7 +29,8 @@ jobs:
           git clone https://${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}.git
           
         
-
+      - name: hub
+        run: git clone https://github.com/leol0ps/hub
       - name: Checkout2
         uses: actions/checkout@v4
         with:
@@ -41,7 +42,7 @@ jobs:
       - name: Updocker
         shell: bash
         run: |
-            cd ..
+            cd hub 
             docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
       - name: Install dependencies
         run: npm ci
