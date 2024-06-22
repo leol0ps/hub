@@ -25,13 +25,10 @@ jobs:
       - name: echo repo
         run: echo ${{github.event.inputs.repo}} 
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-           path: 'student'
-           ref: 'main'
-           repository: '${{github.event.inputs.repo}}'
-           token: '{{secrets.token}}'
-           persist-credentials: true
+        run: |
+          git clone https://${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}.git
+          
+        
 
       - name: Checkout2
         uses: actions/checkout@v4
