@@ -49,6 +49,7 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: | 
+          ls
           cp student/ans.c problem
           npx playwright test > log.txt
           git config --global user.name=leol0ps
