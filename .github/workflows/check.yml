@@ -45,6 +45,7 @@ jobs:
             cd hub 
             docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
       - name: Install dependencies
+        uses: actions/setup-node@v4
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
