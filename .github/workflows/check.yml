@@ -56,13 +56,15 @@ jobs:
           npm init playwright@latest
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Run Playwright tests
+      - name: Copy files
         run: | 
           ls
           cd student/
           cp ans.c ../problem/ 
           cd ..
+          cp hub/contest.spec.ts problem/
           cd problem/
+          ls
           npx playwright test > log.txt
           cp log.txt ../student/
           cd ..
