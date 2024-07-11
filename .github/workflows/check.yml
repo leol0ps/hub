@@ -68,7 +68,7 @@ jobs:
           ls
       - name: Run test
         run: |
-          npx playwright test > log.txt
+          npx playwright test
           cp log.txt ../student/
           cd ..
           cd student/
