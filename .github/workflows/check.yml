@@ -59,7 +59,7 @@ jobs:
       - name: Run Playwright tests
         run: | 
           ls
-          cp student/ans.c problem
+          cp student/ans.c problem/ 
           npx playwright test > log.txt
           git config --global user.name=leol0ps
           git config --global user.email=leotimao2@hotmail.com
