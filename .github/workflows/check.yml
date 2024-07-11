@@ -52,7 +52,7 @@ jobs:
       - name: install
         working-directory: .
         run: |
-          npm ci
+          npm init playwright@latest
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
