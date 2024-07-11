@@ -71,6 +71,7 @@ jobs:
         run: |
           ls
           cd problem/
+          npx playwright install chromium
           npx playwright test --project=chromium
           cp log.txt ../student/
           cd ..
