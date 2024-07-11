@@ -1,11 +1,12 @@
 name: action-test
 on:
   workflow_dispatch:
-    env:
-      REP: '&{{github.event.inputs.repo}}'
+    ##env:
+      ##REP: '&{{github.event.inputs.repo}}'
       #TOK: '&{{github.event.inputs.token}}'
     inputs:
       distinct_id:
+        type: string
       repo:
         type: string
   workflow_call:
@@ -46,6 +47,9 @@ jobs:
             docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
       - name: Install dependencies
         uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: install
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
