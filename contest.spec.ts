@@ -84,6 +84,16 @@ test('test', async ({ page }) => {
   });
   await page.getByRole('button', { name: 'Send' }).click();
   while (tst) {
+    
+    
+    try {
+      const z = await page.waitForSelector('text="Not answered yet"', { timeout: 2000 }) //locator('Not answered yet').first();
+    } catch (error) {
+      tst = false
+    }
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    await page.goto('http://localhost:8000/boca/team/run.php');
+
     const thead = 'Run #';
     const loc1 = page.locator('tr > td:nth-of-type(1)', {
       hasText: thead
@@ -103,14 +113,6 @@ test('test', async ({ page }) => {
     console.log(await row.locator('td:nth-of-type(4)').textContent());
     console.log(await row.locator('td:nth-of-type(5)').textContent());
     console.log('\n');
-    
-    try {
-      const z = await page.waitForSelector('text="Not answered yet"', { timeout: 2000 }) //locator('Not answered yet').first();
-    } catch (error) {
-      tst = false
-    }
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    await page.goto('http://localhost:8000/boca/team/run.php');
   }
   try {
     await page.waitForSelector('text="NO - Contact staff" ', { timeout: 1000 });
