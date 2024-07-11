@@ -57,7 +57,7 @@ jobs:
           yarn add --dev @playwright/test
           cd ..
       - name: Install Playwright Browsers
-        run: npx playwright install-deps
+        run: npx playwright install --with-deps
       - name: Copy files
         run: | 
           ls
