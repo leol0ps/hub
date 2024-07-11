@@ -66,6 +66,8 @@ jobs:
           cp hub/contest.spec.ts problem/
           cd problem/
           ls
+      - name: Run test
+        run: |
           npx playwright test > log.txt
           cp log.txt ../student/
           cd ..
