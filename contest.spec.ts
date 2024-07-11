@@ -84,18 +84,18 @@ test('test', async ({ page }) => {
   });
   await page.getByRole('button', { name: 'Send' }).click();
   while (tst) {
-    const thead = 'Runs #';
+    const thead = 'Run #';
     const loc1 = page.locator('tr > td:nth-of-type(1)', {
-    hasText: thead
-  });
-  const loc2 = page.locator('td:nth-of-type(1)', {
-    hasNotText: thead
-  });
-  const rows = await page
-    .locator('table')
-    .filter({ has: loc1 })
-    .locator('tr')
-    .filter({ has: loc2 });
+      hasText: thead
+    });
+    const loc2 = page.locator('td:nth-of-type(1)', {
+      hasNotText: thead
+    });
+    const rows = await page
+      .locator('table')
+      .filter({ has: loc1 })
+      .locator('tr')
+      .filter({ has: loc2 });
     const rowCount = await rows.count();
     const row = rows.nth(0);
     console.log(await row.locator('td:nth-of-type(1)').textContent());
