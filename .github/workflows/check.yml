@@ -53,7 +53,8 @@ jobs:
         working-directory: .
         run: |
           cd problem/
-          npm ci
+          yarn init -y
+          yarn add --dev @playwright/test
           cd ..
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
