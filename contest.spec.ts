@@ -44,7 +44,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="problemname"]').click();
   await page.locator('input[name="problemname"]').fill('das');
   await page.locator('input[name="probleminput"]').click();
-  await page.locator('input[name="probleminput"]').setInputFiles('L1_1.zip');
+  await page.locator('input[name="probleminput"]').setInputFiles('L1_2.zip');
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
