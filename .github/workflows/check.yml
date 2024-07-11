@@ -71,7 +71,7 @@ jobs:
         run: |
           ls
           cd problem/
-          npx playwright test > log.txt
+          npx playwright test 
           cp log.txt ../student/
           cd ..
           cd student/
