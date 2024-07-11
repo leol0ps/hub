@@ -12,8 +12,6 @@ var tst = true
 const selectors = ['YES', 'NO - Compilation error', 'NO - Runtime error', 'NO - Time limit exceeded', 'NO - Presentation error', 'NO - Wrong answer', 'NO - Contact staff']
 test('test', async ({ page }) => {
   test.setTimeout(150_000);
-  await page.goto('https://demo.playwright.dev/todomvc/');
-  await page.goto('https://demo.playwright.dev/todomvc/#/');
   await page.goto('http://localhost:8000/boca/');
   await page.locator('input[name="name"]').click();
   await page.locator('input[name="name"]').fill('system');
@@ -42,7 +40,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="problemnumber"]').click();
   await page.locator('input[name="problemnumber"]').fill('5');
   await page.locator('input[name="problemname"]').click();
-  await page.locator('input[name="problemname"]').fill('das');
+  await page.locator('input[name="problemname"]').fill('L1_2');
   await page.locator('input[name="probleminput"]').click();
   await page.locator('input[name="probleminput"]').setInputFiles('L1_2.zip');
   page.once('dialog', async dialog => {
