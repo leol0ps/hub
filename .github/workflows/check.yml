@@ -75,8 +75,8 @@ jobs:
           cp log.txt ../student/
           cd ..
           cd student/
-          git config --global user.name=leol0ps
-          git config --global user.email=leotimao2@hotmail.com
+          git config --global user.name "leol0ps"
+          git config --global user.email "leotimao2@hotmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
           git add log.txt
           git commit -m "answer"
