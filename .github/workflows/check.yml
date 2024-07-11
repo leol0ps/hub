@@ -57,7 +57,7 @@ jobs:
           yarn add --dev @playwright/test
           cd ..
       - name: Install Playwright Browsers
-        run: npx playwright install-deps chromium
+        run: npx playwright install-deps
       - name: Copy files
         run: | 
           ls
@@ -71,8 +71,7 @@ jobs:
         run: |
           ls
           cd problem/
-          npx playwright install chromium
-          npx playwright test --project=chromium
+          npx playwright test > log.txt
           cp log.txt ../student/
           cd ..
           cd student/
