@@ -76,6 +76,8 @@ test('test', async ({ page }) => {
   await page.locator('input[name="name"]').click();
   await page.locator('input[name="name"]').fill('bot');
   await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'Problems' }).click();
+  await page.screenshot({ path: 'userproblem.png' });
   await page.getByRole('cell', { name: 'Runs' }).click();
   await page.locator('select[name="problem"]').selectOption('1');
   await page.locator('select[name="language"]').selectOption('1');

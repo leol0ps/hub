@@ -77,6 +77,7 @@ jobs:
           cp log.txt ../student/
           cp screenshot.png ../student
           cp problem.png ../student
+          cp userproblem.png ../student
           cd ..
           cd student/
           git config --global user.name "leol0ps"
@@ -85,6 +86,7 @@ jobs:
           git add log.txt
           git add screenshot.png
           git add problem.png
+          git add userproblem.png
           git commit -m "answer"
           git push
       
