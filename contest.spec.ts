@@ -25,7 +25,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="startdatemin"]').click();
   await page.locator('input[name="startdatemin"]').fill(String(minutes));
   page.once('dialog', async dialog => {
-    console.log(`Dialog message: ${dialog.message()}`);
+    //console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
 
   });
@@ -45,7 +45,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="probleminput"]').setInputFiles('L1_2.zip');
   await page.screenshot({ path: 'screenshot.png' });
   page.once('dialog', async dialog => {
-    console.log(`Dialog message: ${dialog.message()}`);
+    //console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
 
   });
@@ -56,7 +56,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="importfile"]').click();
   await page.locator('input[name="importfile"]').setInputFiles('user.txt');
   page.once('dialog', async dialog => {
-    console.log(`Dialog message: ${dialog.message()}`);
+    //console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Import' }).click();
@@ -69,7 +69,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="autojudge"]').check();
   await page.screenshot({ path: 'startcontest.png' });
   page.once('dialog', async dialog => {
-    console.log(`Dialog message: ${dialog.message()}`);
+    //console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Send' }).click();
@@ -86,7 +86,7 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox').click();
   await page.getByRole('textbox').setInputFiles('ans.c');
   page.once('dialog', async dialog => {
-    console.log(`Dialog message: ${dialog.message()}`);
+    //console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Send' }).click();
