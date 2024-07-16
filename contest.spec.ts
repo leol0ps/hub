@@ -67,11 +67,13 @@ test('test', async ({ page }) => {
   await page.locator('input[name="startdatemin"]').fill(String(minutes));
   await page.getByRole('cell', { name: '<- experimental' }).click();
   await page.locator('input[name="autojudge"]').check();
+  await page.screenshot({ path: 'startcontest.png' });
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Send' }).click();
+  await page.screenshot({ path: 'checkcontest.png' });
   await page.goto('http://localhost:8000/boca/index.php');
   await page.locator('input[name="name"]').click();
   await page.locator('input[name="name"]').fill('bot');
