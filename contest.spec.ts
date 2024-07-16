@@ -5,8 +5,8 @@ export default defineConfig({
   timeout: 5 * 60 * 2000,
 });
 const now = new Date();
-const hours = now.getHours();
-const minutes = now.getMinutes();
+const hours = now.getHours() - 3;
+const minutes = now.getMinutes() - 3;
 var check = "Not answered yet"
 var tst = true
 const selectors = ['YES', 'NO - Compilation error', 'NO - Runtime error', 'NO - Time limit exceeded', 'NO - Presentation error', 'NO - Wrong answer', 'NO - Contact staff']
@@ -59,15 +59,12 @@ test('test', async ({ page }) => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
-  const start = new Date();
-  const shours =  start.getHours();
-  const sminutes = start.getMinutes();
   await page.getByRole('button', { name: 'Import' }).click();
   await page.getByRole('link', { name: 'Site' }).click();
   await page.locator('input[name="startdateh"]').click();
-  await page.locator('input[name="startdateh"]').fill(String(shours));
+  await page.locator('input[name="startdateh"]').fill(String(hours));
   await page.locator('input[name="startdatemin"]').click();
-  await page.locator('input[name="startdatemin"]').fill(String(sminutes));
+  await page.locator('input[name="startdatemin"]').fill(String(minutes));
   await page.getByRole('cell', { name: '<- experimental' }).click();
   await page.locator('input[name="autojudge"]').check();
   await page.screenshot({ path: 'startcontest.png' });
