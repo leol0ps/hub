@@ -78,13 +78,13 @@ test('test', async ({ page }) => {
   await page.locator('select[name="language"]').selectOption('1');
   await page.getByRole('textbox').click();
   await page.getByRole('textbox').setInputFiles('ans.c');
+  await page.screenshot({ path: 'screenshot.png' });
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Send' }).click();
   await page.goto('http://localhost:8000/boca/team/run.php');
-  await page.screenshot({ path: 'screenshot.png' });
   while (tst) {
     
     
