@@ -43,12 +43,15 @@ test('test', async ({ page }) => {
   await page.locator('input[name="problemname"]').fill('L1_2');
   await page.locator('input[name="probleminput"]').click();
   await page.locator('input[name="probleminput"]').setInputFiles('L1_2.zip');
+  await page.screenshot({ path: 'screenshot.png' });
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
 
   });
   await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByRole('link', { name: 'Problems' }).click();
+  await page.screenshot({ path: 'problem.png' });
   await page.getByRole('link', { name: 'Users' }).click();
   await page.locator('input[name="importfile"]').click();
   await page.locator('input[name="importfile"]').setInputFiles('user.txt');
@@ -73,8 +76,6 @@ test('test', async ({ page }) => {
   await page.locator('input[name="name"]').click();
   await page.locator('input[name="name"]').fill('bot');
   await page.getByRole('button', { name: 'Login' }).click();
-  await page.getByRole('link', { name: 'Problems' }).click();
-  await page.screenshot({ path: 'screenshot.png' });
   await page.getByRole('cell', { name: 'Runs' }).click();
   await page.locator('select[name="problem"]').selectOption('1');
   await page.locator('select[name="language"]').selectOption('1');

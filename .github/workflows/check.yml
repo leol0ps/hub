@@ -83,6 +83,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
           git add log.txt
           git add screenshot.png
+          git add problem.png
           git commit -m "answer"
           git push
       
