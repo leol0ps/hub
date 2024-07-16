@@ -23,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
+        run: echo ${{ github.event.inputs.distinct_id }}
       - name: echo repo
         run: echo ${{github.event.inputs.repo}} 
       - name: Checkout
