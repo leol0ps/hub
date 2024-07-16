@@ -59,12 +59,15 @@ test('test', async ({ page }) => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
   });
+  const start = new Date();
+  const shours =  start.getHours();
+  const sminutes = start.getMinutes();
   await page.getByRole('button', { name: 'Import' }).click();
   await page.getByRole('link', { name: 'Site' }).click();
   await page.locator('input[name="startdateh"]').click();
-  await page.locator('input[name="startdateh"]').fill(String(hours));
+  await page.locator('input[name="startdateh"]').fill(String(shours));
   await page.locator('input[name="startdatemin"]').click();
-  await page.locator('input[name="startdatemin"]').fill(String(minutes));
+  await page.locator('input[name="startdatemin"]').fill(String(sminutes));
   await page.getByRole('cell', { name: '<- experimental' }).click();
   await page.locator('input[name="autojudge"]').check();
   await page.screenshot({ path: 'startcontest.png' });
