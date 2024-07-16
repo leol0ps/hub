@@ -38,7 +38,7 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Login' }).click();
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.locator('input[name="problemnumber"]').click();
-  await page.locator('input[name="problemnumber"]').fill('5');
+  await page.locator('input[name="problemnumber"]').fill('1');
   await page.locator('input[name="problemname"]').click();
   await page.locator('input[name="problemname"]').fill('L1_2');
   await page.locator('input[name="probleminput"]').click();
@@ -74,7 +74,7 @@ test('test', async ({ page }) => {
   await page.locator('input[name="name"]').fill('bot');
   await page.getByRole('button', { name: 'Login' }).click();
   await page.getByRole('cell', { name: 'Runs' }).click();
-  await page.locator('select[name="problem"]').selectOption('5');
+  await page.locator('select[name="problem"]').selectOption('1');
   await page.locator('select[name="language"]').selectOption('1');
   await page.getByRole('textbox').click();
   await page.getByRole('textbox').setInputFiles('ans.c');
