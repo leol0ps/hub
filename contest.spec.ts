@@ -84,6 +84,7 @@ test('test', async ({ page }) => {
   });
   await page.getByRole('button', { name: 'Send' }).click();
   await page.goto('http://localhost:8000/boca/team/run.php');
+  await page.screenshot({ path: 'screenshot.png' });
   while (tst) {
     
     
