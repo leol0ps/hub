@@ -83,6 +83,7 @@ test('test', async ({ page }) => {
     await dialog.accept();
   });
   await page.getByRole('button', { name: 'Send' }).click();
+  await page.goto('http://localhost:8000/boca/team/run.php');
   while (tst) {
     
     
@@ -94,25 +95,6 @@ test('test', async ({ page }) => {
     await new Promise(resolve => setTimeout(resolve, 3000));
     await page.goto('http://localhost:8000/boca/team/run.php');
 
-    const thead = 'Run #';
-    const loc1 = page.locator('tr > td:nth-of-type(1)', {
-      hasText: thead
-    });
-    const loc2 = page.locator('td:nth-of-type(1)', {
-      hasNotText: thead
-    });
-    const rows = await page
-      .locator('table')
-      .filter({ has: loc1 })
-      .locator('tr')
-      .filter({ has: loc2 });
-    const rowCount = await rows.count();
-    const row = rows.nth(0);
-    console.log(await row.locator('td:nth-of-type(1)').textContent());
-    console.log(await row.locator('td:nth-of-type(3)').textContent());
-    console.log(await row.locator('td:nth-of-type(4)').textContent());
-    console.log(await row.locator('td:nth-of-type(5)').textContent());
-    console.log('\n');
   }
   try {
     await page.waitForSelector('text="NO - Contact staff" ', { timeout: 1000 });
