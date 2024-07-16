@@ -76,6 +76,7 @@ jobs:
           npx playwright test > log.txt
           cp log.txt ../student/
           cp screenshot.png ../student
+          cp problem.png ../student
           cd ..
           cd student/
           git config --global user.name "leol0ps"
