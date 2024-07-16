@@ -73,12 +73,13 @@ test('test', async ({ page }) => {
   await page.locator('input[name="name"]').click();
   await page.locator('input[name="name"]').fill('bot');
   await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'Problems' }).click();
+  await page.screenshot({ path: 'screenshot.png' });
   await page.getByRole('cell', { name: 'Runs' }).click();
   await page.locator('select[name="problem"]').selectOption('1');
   await page.locator('select[name="language"]').selectOption('1');
   await page.getByRole('textbox').click();
   await page.getByRole('textbox').setInputFiles('ans.c');
-  await page.screenshot({ path: 'screenshot.png' });
   page.once('dialog', async dialog => {
     console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
