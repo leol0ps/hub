@@ -145,18 +145,18 @@ test('test', async ({ page }) => {
   // }
 
 
-  for (const selector of selectors) {
-    try {
-      await page.waitForSelector(`text="${selector}"`, { timeout: 500 });
-      console.log(`Found "${selector}" on the page.`);
-    } catch (error) {
-      console.log(`"${selector}" not found on the page within timeout.`);
-    }
-  }
+//   for (const selector of selectors) {
+//     try {
+//       await page.waitForSelector(`text="${selector}"`, { timeout: 500 });
+//       console.log(`Found "${selector}" on the page.`);
+//     } catch (error) {
+//       console.log(`"${selector}" not found on the page within timeout.`);
+//     }
+//   }
   
 
-  await page.getByRole('link', { name: 'Logout' }).click();
-});
+//   await page.getByRole('link', { name: 'Logout' }).click();
+// });
 
 
 
