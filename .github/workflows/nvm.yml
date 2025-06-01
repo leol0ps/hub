@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       distinct_id:
+      repo:
 
 jobs:
   test:
