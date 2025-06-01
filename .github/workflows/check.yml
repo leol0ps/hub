@@ -1,22 +1,9 @@
 name: action-test
 on:
   workflow_dispatch:
-    ##env:
-      ##REP: '&{{github.event.inputs.repo}}'
-      #TOK: '&{{github.event.inputs.token}}'
     inputs:
       distinct_id:
-        type: string
       repo:
-        type: string
-  workflow_call:
-    inputs:
-      repo: 
-        type: string
-      user: 
-        type: string
-      email: 
-        type: string
 
 jobs:
   test:
