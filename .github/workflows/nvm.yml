@@ -58,6 +58,7 @@ jobs:
           cd problem/
           npx playwright test > log.txt
       - name: Copying answer
+        run: |
           ls
           cp log.txt ../student/
           cp screenshot.png ../student
@@ -68,6 +69,7 @@ jobs:
           cd ..
           cd student/
       - name: Sending ansers to student repo  
+        run: |
           ls
           git config --global user.name "leol0ps"
           git config --global user.email "leotimao2@hotmail.com"
