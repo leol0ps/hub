@@ -54,8 +54,10 @@ jobs:
           cd problem/
           ls
       - name: Run test
+        shell: bash
         run: |
           cd problem/
+          
           npx playwright test > log.txt
       - name: Copying answer
         run: |
