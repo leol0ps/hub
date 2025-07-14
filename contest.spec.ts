@@ -39,6 +39,7 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'Login' }).click();
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.locator('input[name="problemnumber"]').click();
+  await page.waitForSelector('select[name="problem"] > option[value="1"]', { timeout: 10000 });
   await page.locator('input[name="problemnumber"]').fill('1');
   await page.locator('input[name="problemname"]').click();
   await page.locator('input[name="problemname"]').fill('L1_2');
