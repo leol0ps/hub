@@ -82,7 +82,7 @@ test('test', async ({ page }) => {
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.screenshot({ path: 'userproblem.png' });
   await page.getByRole('cell', { name: 'Runs' }).click();
-  await page.waitForSelector('select[name="problem"] > option[value="1"]', { timeout: 10000 });
+  await page.waitForTimeout(1000); 
   await page.locator('select[name="problem"]').selectOption('1');
   await page.locator('select[name="language"]').selectOption('1');
   await page.locator('input[name="sourcefile"]').click();
