@@ -59,10 +59,9 @@ jobs:
       - name: Run test
         run: |
           cd problem/
-          npx playwright test ##log
+          npx playwright test 
       - name: Copying answer
           ls
-          cp log.txt ../student/
           cp screenshot.png ../student
           cp problem.png ../student
           cp userproblem.png ../student
@@ -75,7 +74,7 @@ jobs:
           git config --global user.name "leol0ps"
           git config --global user.email "leotimao2@hotmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
-          git add screenshot.png ## git add log.txt
+          git add screenshot.png 
           git add problem.png
           git add userproblem.png
           git add checkcontest.png
