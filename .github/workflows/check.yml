@@ -59,8 +59,7 @@ jobs:
       - name: Run test
         run: |
           cd problem/
-          npx playwright test 
-          ## > log.txt
+          npx playwright test ##log
       - name: Copying answer
           ls
           cp log.txt ../student/
