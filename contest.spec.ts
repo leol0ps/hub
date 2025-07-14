@@ -5,9 +5,11 @@ export default defineConfig({
   timeout: 5 * 60 * 2000,
 });
 const now = new Date();
-const brasilData =  new Date(now.getTime() - 3 * 60 * 60 * 1000); // github roda as actions em gmt +0 e o boca por padrão é gtm +3, portanto subtraimos 3 hrs
-const hours = brasilData.getUTCHours();
-const minutes = brasilData.getUTCMinutes();
+//const brasilData =  new Date(now.getTime() - 3 * 60 * 60 * 1000); // github roda as actions em gmt +0 e o boca por padrão é gtm +3, portanto subtraimos 3 hrs
+//const hours = brasilData.getUTCHours();
+//const minutes = brasilData.getUTCMinutes();
+const hours = now.getHours() - 3;
+const minutes = now.getMinutes() - 3;
 var check = "Not answered yet"
 var tst = true
 const selectors = ['YES', 'NO - Compilation error', 'NO - Runtime error', 'NO - Time limit exceeded', 'NO - Presentation error', 'NO - Wrong answer', 'NO - Contact staff']
