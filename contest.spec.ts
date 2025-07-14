@@ -84,8 +84,8 @@ test('test', async ({ page }) => {
   await page.getByRole('cell', { name: 'Runs' }).click();
   await page.locator('select[name="problem"]').selectOption('1');
   await page.locator('select[name="language"]').selectOption('1');
-  await page.getByRole('textbox').click();
-  await page.getByRole('textbox').setInputFiles('ans.c');
+  await page.locator('input[name="sourcefile"]').click();
+  await page.locator('input[name="sourcefile"]').setInputFiles('ans.c');
   page.once('dialog', async dialog => {
     //console.log(`Dialog message: ${dialog.message()}`);
     await dialog.accept();
