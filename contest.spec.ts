@@ -168,7 +168,7 @@ test('Submit solution and check result', async ({ page }) => {
       await page.waitForTimeout(3000);
       await page.goto('http://localhost:8000/boca/team/run.php');
     }
-  
+    await page.screenshot({ path: 'screenshot.png' });
     for (const selector of selectors) {
       try {
         await page.waitForSelector(`text="${selector}"`, { timeout: 500 });
