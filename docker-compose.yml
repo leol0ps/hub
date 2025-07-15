@@ -25,7 +25,7 @@ services:
 
   # BOCA Judge Container (Jail)
   boca-jail:
-    image: ghcr.io/joaofazolo/boca-docker/boca-jail:latest
+    image: boca-jail-fixed:latest
     privileged: true
     depends_on:
       - boca-db
