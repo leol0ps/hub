@@ -16,3 +16,5 @@ RUN ldd /usr/bin/gcc | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --paren
 
 
 RUN cp --parents /lib64/ld-linux-x86-64.so.2 /bocajail/ || true
+
+RUN cp -r /usr/include /bocajail/usr/
