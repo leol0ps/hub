@@ -32,8 +32,15 @@ RUN for bin in /usr/bin/gcc /usr/bin/gcc-11 /usr/bin/as /usr/bin/ld $(gcc -print
         xargs -I '{}' cp --parents '{}' /bocajail/; \
     done
 
-# Copia cabeçalhos padrão do sistema (ex: stdio.h, math.h, stddef.h)
-RUN cp -r /usr/include /bocajail/usr/
+
+# Copia headers do sistema padrão
+RUN mkdir -p /bocajail/usr/include && \
+    cp -r /usr/include/* /bocajail/usr/include/
+
+# Copia headers internos do GCC
+RUN mkdir -p /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/include && \
+    cp -r /usr/lib/gcc/x86_64-linux-gnu/11/include/* /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/include/
+
 
 # Garante permissões mínimas para execução
 RUN chmod -R 755 /bocajail
