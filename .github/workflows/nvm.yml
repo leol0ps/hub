@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           cd problem/
-          npx playwright test > log.txt | tee log.txt
+          npx playwright test 2>&1| tee log.txt
           cp log.txt ../student
           cp screenshot.png ../student
       - name: Log Jail Output
