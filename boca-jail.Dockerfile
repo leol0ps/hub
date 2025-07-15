@@ -21,4 +21,4 @@ RUN for bin in /usr/bin/gcc /usr/lib/gcc/x86_64-linux-gnu/11/cc1 /usr/bin/as /us
       ldd $bin | grep "=> /" | awk '{print $3}' | xargs -I '{}' ln -sf '{}' /bocajail'{}'; \
     done
 
-USER boca
+
