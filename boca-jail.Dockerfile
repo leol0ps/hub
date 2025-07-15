@@ -37,3 +37,7 @@ RUN cp -r /usr/include /bocajail/usr/
 
 # Garante permissões mínimas para execução
 RUN chmod -R 755 /bocajail
+RUN chmod -R a+rwX /bocajail/tmp && \
+    chmod -R a+rwX /bocajail/usr && \
+    chmod -R a+rwX /bocajail/lib && \
+    chmod -R a+rwX /bocajail/lib64
