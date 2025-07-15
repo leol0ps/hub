@@ -1,30 +1,34 @@
 FROM ghcr.io/joaofazolo/boca-docker/boca-jail:latest
+RUN apt-get update && apt-get install -y gcc g++ make libc6-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y gcc g++ make libc6-dev libisl-dev binutils && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
-RUN mkdir -p /bocajail/usr/bin && \
-    cp -v /usr/bin/gcc /bocajail/usr/bin/ && \
+RUN mkdir -p /bocajail
+# Copia executáveis para dentro do jail
+RUN cp -v /usr/bin/gcc /bocajail/usr/bin/ && \
     cp -v /usr/bin/gcc-11 /bocajail/usr/bin/ && \
     cp -v /usr/bin/as /bocajail/usr/bin/ && \
     cp -v /usr/bin/ld /bocajail/usr/bin/ || true
 
-
-RUN CC1=$(gcc -print-prog-name=cc1) && \
-    mkdir -p /bocajail$(dirname $CC1) && \
-    cp -v $CC1 /bocajail$CC1
-
-
+RUN cp -v $(gcc -print-prog-name=cc1) /bocajail$(dirname $(gcc -print-prog-name=cc1))
 RUN ldd /usr/bin/gcc | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/ && \
-    ldd $(gcc -print-prog-name=cc1) | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/ || true
-
-
-RUN cp -rv /usr/include /bocajail/usr/ && \
-    cp -rv /usr/lib/gcc /bocajail/usr/lib/
+    ldd $(gcc -print-prog-name=cc1) | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/ && \
+    ldd /usr/bin/as | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/ && \
+    ldd /usr/bin/ld | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/
 
 RUN mkdir -p /bocajail/lib64 && \
-    [ "$(readlink -f /lib64/ld-linux-x86-64.so.2)" != "$(readlink -f /bocajail/lib64/ld-linux-x86-64.so.2 2>/dev/null)" ] && \
-    cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/ || true
+    cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/ || true && \
+    cp -v /lib/x86_64-linux-gnu/ld-*.so* /bocajail/lib/x86_64-linux-gnu/ || true
+
+
+RUN mkdir -p /bocajail/usr/include && \
+    cp -r /usr/include/* /bocajail/usr/include/
+
+
+RUN ldd /usr/bin/gcc | grep "ld-linux" || true
+
+
+RUN cp -r /lib/x86_64-linux-gnu /bocajail/lib/ || true && \
+    cp -r /usr/lib/x86_64-linux-gnu /bocajail/usr/lib/ || true
+
+
+RUN rm -rf /var/lib/apt/lists/*
 
