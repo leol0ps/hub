@@ -69,6 +69,12 @@ jobs:
           cp screenshot.png ../student
       - name: Log Jail Output
         run: docker logs $(docker ps -q --filter "name=boca-jail")
+      - name: Copy Boca Jail tmp files
+        run: |
+          CONTAINER_ID=$(docker ps -q --filter "name=boca-jail")
+          mkdir -p boca_jail_tmp
+          docker cp $CONTAINER_ID:/home/bocajail/tmp ./bocajailtmp
+          cp -r bocajailtmp /student/
       - name: Sending ansers to student repo  
         run: |
           ls
@@ -78,6 +84,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
           git add log.txt
           git add screenshot.png
+          git add bocajailtmp
           git commit -m "answer"
           git push
       
