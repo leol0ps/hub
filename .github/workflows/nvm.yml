@@ -54,11 +54,16 @@ jobs:
           cp hub/contest.spec.ts problem/
           cd problem/
           ls
+      - name: Check ans.c contents
+        run: |
+          cat problem/ans.c
+          ls -lh problem/ans.c
+
+          
       - name: Run test
         shell: bash
         run: |
           cd problem/
-          
           npx playwright test > log.txt
           cp log.txt ../student
           cp screenshot.png ../student
