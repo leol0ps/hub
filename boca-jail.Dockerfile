@@ -60,4 +60,15 @@ RUN cp -v /usr/lib/x86_64-linux-gnu/libm.so* /bocajail/usr/lib/x86_64-linux-gnu/
     cp -v /usr/lib/x86_64-linux-gnu/libc.so* /bocajail/usr/lib/x86_64-linux-gnu/ && \
     cp -v /usr/lib/gcc/x86_64-linux-gnu/11/libgcc* /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/
 
+# Copia bibliotecas necessárias para linking estático
+RUN mkdir -p /bocajail/usr/lib/x86_64-linux-gnu && \
+    cp /usr/lib/x86_64-linux-gnu/libc.a /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp /usr/lib/x86_64-linux-gnu/libm.a /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp /usr/lib/gcc/x86_64-linux-gnu/11/libgcc.a /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/ && \
+    cp /usr/lib/gcc/x86_64-linux-gnu/11/libgcc_eh.a /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/
+
+# Copia arquivos de CRT (C runtime startup)
+RUN cp /usr/lib/x86_64-linux-gnu/crt*.o /bocajail/usr/lib/x86_64-linux-gnu/
+
+
 
