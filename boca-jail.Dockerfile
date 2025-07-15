@@ -72,3 +72,4 @@ RUN touch /bocajail/linux-vdso.so.1
 # Ajusta permissões
 RUN chmod -R 755 /bocajail && \
     chmod -R 777 /bocajail/tmp
+RUN cp -v /usr/lib/x86_64-linux-gnu/*crt*.o /bocajail/usr/lib/x86_64-linux-gnu/ || true
