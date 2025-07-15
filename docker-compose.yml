@@ -29,5 +29,5 @@ services:
     privileged: true
     depends_on:
       - boca-db
-    #privileged: true
+    privileged: true
     restart: on-failure
