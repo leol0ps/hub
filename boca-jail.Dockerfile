@@ -1,13 +1,25 @@
-
 FROM ghcr.io/joaofazolo/boca-docker/boca-jail:latest
 
 
 RUN apt-get update && \
-    apt-get install -y gcc g++ libc6-dev make && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y gcc g++ make libc6-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-WORKDIR /bocajail
+RUN ldd /usr/bin/gcc | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/ || true
 
 
+RUN cp -v /usr/bin/gcc /bocajail/usr/bin/
+
+
+RUN cp -v /usr/bin/gcc-11 /bocajail/usr/bin/
+
+
+RUN cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/
+
+
+RUN chmod -R a+rX /bocajail
+
+
+RUN ls -lR /bocajail/usr/bin/
+RUN ls -lR /bocajail/lib64/
