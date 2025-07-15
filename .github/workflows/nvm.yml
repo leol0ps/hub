@@ -26,6 +26,10 @@ jobs:
           repository: 'leol0ps/backup-tcc'
           token: '${{ secrets.BASE_REPO}}'
           persist-credentials: true
+      - name: Build boca-jail-fixed image
+        run: |
+          cd hub
+          docker build -f boca-jail.Dockerfile -t boca-jail-fixed .
       - name: Updocker
         shell: bash
         run: |
