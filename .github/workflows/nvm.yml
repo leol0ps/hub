@@ -29,8 +29,9 @@ jobs:
       - name: Updocker
         shell: bash
         run: |
-            cd hub 
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+            cp hub/docker-compose.yml problem/ 
+            cd problem/
+            docker compose up -d
       - name: Install dependencies
         uses: actions/setup-node@v4
         with:
