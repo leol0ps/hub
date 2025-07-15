@@ -24,6 +24,7 @@ RUN ldd /usr/bin/gcc | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --paren
 RUN cp -rv /usr/include /bocajail/usr/ && \
     cp -rv /usr/lib/gcc /bocajail/usr/lib/
 
-
 RUN mkdir -p /bocajail/lib64 && \
-    cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/
+    [ "$(readlink -f /lib64/ld-linux-x86-64.so.2)" != "$(readlink -f /bocajail/lib64/ld-linux-x86-64.so.2 2>/dev/null)" ] && \
+    cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/ || true
+
