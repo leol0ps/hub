@@ -62,6 +62,8 @@ jobs:
           npx playwright test > log.txt
           cp log.txt ../student
           cp screenshot.png ../student
+      - name: Log Jail Output
+        run: docker logs $(docker ps -q --filter "name=boca-jail")
       - name: Sending ansers to student repo  
         run: |
           ls
