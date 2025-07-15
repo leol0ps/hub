@@ -58,6 +58,12 @@ RUN cp /usr/lib/x86_64-linux-gnu/libc.a /bocajail/usr/lib/x86_64-linux-gnu/ && \
     cp /usr/lib/gcc/x86_64-linux-gnu/11/libgcc_eh.a /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/ && \
     cp /usr/lib/x86_64-linux-gnu/libpthread.a /bocajail/usr/lib/x86_64-linux-gnu/ || true
 
+RUN cp -v /usr/lib/x86_64-linux-gnu/libc.a \
+           /usr/lib/x86_64-linux-gnu/libm.a \
+           /usr/lib/x86_64-linux-gnu/libc_nonshared.a \
+           /bocajail/usr/lib/x86_64-linux-gnu/
+
+
 # Copia plugin de LTO
 RUN cp /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so* /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/
 
