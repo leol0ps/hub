@@ -5,6 +5,11 @@ USER root
 # Instala compiladores e ferramentas essenciais
 RUN apt-get update && apt-get install -y gcc g++ make libc6-dev binutils && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libc6-dev libmvec-dev
+RUN cp /usr/lib/x86_64-linux-gnu/libm-*.a /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp /usr/lib/x86_64-linux-gnu/libmvec.a /bocajail/usr/lib/x86_64-linux-gnu/
+RUN cp /usr/lib/x86_64-linux-gnu/libm.so* /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp /usr/lib/x86_64-linux-gnu/libmvec.so* /bocajail/usr/lib/x86_64-linux-gnu/
 
 # Cria estrutura de diretórios esperada dentro da jail
 RUN mkdir -p /bocajail/usr/bin \
@@ -78,4 +83,6 @@ RUN touch /bocajail/linux-vdso.so.1
 # Ajusta permissões
 RUN chmod -R 755 /bocajail && \
     chmod -R 777 /bocajail/tmp
+RUN chmod -R 755 /bocajail/usr/lib/x86_64-linux-gnu/
+
 RUN cp -v /usr/lib/x86_64-linux-gnu/*crt*.o /bocajail/usr/lib/x86_64-linux-gnu/ || true
