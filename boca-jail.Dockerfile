@@ -5,10 +5,11 @@ USER root
 # Instala compiladores e ferramentas essenciais
 RUN apt-get update && apt-get install -y gcc g++ make libc6-dev binutils && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN apt-get update && apt-get install -y libc6-dev libmvec-dev
+    apt-get update && apt-get install -y libc6-dev
+
 RUN cp /usr/lib/x86_64-linux-gnu/libm-*.a /bocajail/usr/lib/x86_64-linux-gnu/ && \
     cp /usr/lib/x86_64-linux-gnu/libmvec.a /bocajail/usr/lib/x86_64-linux-gnu/
-RUN cp /usr/lib/x86_64-linux-gnu/libm.so* /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp /usr/lib/x86_64-linux-gnu/libm.so* /bocajail/usr/lib/x86_64-linux-gnu/ && \
     cp /usr/lib/x86_64-linux-gnu/libmvec.so* /bocajail/usr/lib/x86_64-linux-gnu/
 
 # Cria estrutura de diretórios esperada dentro da jail
