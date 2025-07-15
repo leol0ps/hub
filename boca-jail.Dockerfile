@@ -9,13 +9,13 @@ RUN apt-get update && \
 RUN ldd /usr/bin/gcc | grep "=> /" | awk '{print $3}' | xargs -I '{}' cp --parents '{}' /bocajail/ || true
 
 
-RUN cp -v /usr/bin/gcc /bocajail/usr/bin/
+RUN cp -v /usr/bin/gcc /bocajail/usr/bin/ || true
 
 
-RUN cp -v /usr/bin/gcc-11 /bocajail/usr/bin/
+RUN cp -v /usr/bin/gcc-11 /bocajail/usr/bin/ || true
 
 
-RUN cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/
+RUN cp -v /lib64/ld-linux-x86-64.so.2 /bocajail/lib64/ || true
 
 
 RUN chmod -R a+rX /bocajail
