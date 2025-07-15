@@ -74,7 +74,7 @@ jobs:
           CONTAINER_ID=$(docker ps -q --filter "name=boca-jail")
           mkdir -p boca_jail_tmp
           docker cp $CONTAINER_ID:/home/bocajail/tmp ./bocajailtmp
-          cp -r bocajailtmp /student/
+          cp -r bocajailtmp student/
       - name: Sending ansers to student repo  
         run: |
           ls
