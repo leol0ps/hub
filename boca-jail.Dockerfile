@@ -51,4 +51,13 @@ RUN chmod -R a+rwX /bocajail/tmp && \
 # Copia o plugin de LTO usado pelo GCC
 RUN mkdir -p /bocajail/usr/lib/gcc/x86_64-linux-gnu/11 && \
     cp /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so* /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/
+# Copia arquivos de startup do GCC
+RUN cp -v /usr/lib/x86_64-linux-gnu/crt*.o /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp -v /usr/lib/gcc/x86_64-linux-gnu/11/crt*.o /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/ || true
+
+# Copia bibliotecas padrão do sistema
+RUN cp -v /usr/lib/x86_64-linux-gnu/libm.so* /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp -v /usr/lib/x86_64-linux-gnu/libc.so* /bocajail/usr/lib/x86_64-linux-gnu/ && \
+    cp -v /usr/lib/gcc/x86_64-linux-gnu/11/libgcc* /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/
+
 
