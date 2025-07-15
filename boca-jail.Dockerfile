@@ -48,3 +48,7 @@ RUN chmod -R a+rwX /bocajail/tmp && \
     chmod -R a+rwX /bocajail/usr && \
     chmod -R a+rwX /bocajail/lib && \
     chmod -R a+rwX /bocajail/lib64
+# Copia o plugin de LTO usado pelo GCC
+RUN mkdir -p /bocajail/usr/lib/gcc/x86_64-linux-gnu/11 && \
+    cp /usr/lib/gcc/x86_64-linux-gnu/11/liblto_plugin.so* /bocajail/usr/lib/gcc/x86_64-linux-gnu/11/
+
