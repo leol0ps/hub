@@ -71,16 +71,25 @@ jobs:
           npx playwright test 2>&1| tee log.txt
           cp log.txt ../student
           cp screenshot.png ../student
+      - name: Extract BOCA temp directory path
+        id: extract_boca_dir
+        run: |
+          # Extrai a linha com o caminho do log do Playwright
+          path_line=$(grep "Internal directory is " problem/log.txt | tail -1)
+          echo "Linha encontrada: $path_line"
+
+          # Extrai o nome da pasta (ex: bocaXYZ.d)
+          dirname=$(basename "$path_line")
+          echo "BOCA_DIR=$dirname" >> $GITHUB_ENV
       - name: Log Jail Output
         run: docker logs $(docker ps -q --filter "name=boca-jail")
       - name: Copy stdout/stderr from jail if needed
         run: |
           mkdir -p saida
           CONTAINER_ID=$(docker ps -q --filter "name=boca-jail")
-          # Copia stdout0 e stderr0 se existirem
-          docker cp $CONTAINER_ID:/home/bocajail/tmp/stdout ./saida/ || true
-          docker cp $CONTAINER_ID:/home/bocajail/tmp/stderr ./saida/ || true
-          mv saida student
+          docker cp "$CONTAINER_ID:/home/bocajail/tmp/$BOCA_DIR/stdout" ./saida/ || true
+          docker cp "$CONTAINER_ID:/home/bocajail/tmp/$BOCA_DIR/stderr" ./saida/ || true
+          cp -r saida student/
       - name: Commit result as message
         run: |
           cd student/
