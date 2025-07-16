@@ -58,10 +58,16 @@ jobs:
           cp hub/contest.spec.ts problem/
           cd problem/
           ls
-      - name: Check ans.c contents
+      - name: Get changed .c files from last commit
+        id: changed_files
         run: |
-          cat problem/ans.c
-          ls -lh problem/ans.c
+          git fetch origin main
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          grep '^problems/.*/.*\.c$' changed_files.txt > filtered.txt || true
+          cut -d'/' -f2 filtered.txt | sort -u > exercises.txt
+          echo "Exercícios modificados:"
+          cat exercises.txt
+
 
           
       - name: Run test
