@@ -82,6 +82,36 @@ test('Submit solutions and get results', async ({ page }) => {
 
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.getByRole('link', { name: 'Runs' }).click();
+  let problemOptionVisible = false;
+  const maxRetries = 30; // Tenta por até 1 minuto
+  let retries = 0;
+  
+  while (!problemOptionVisible && retries < maxRetries) {
+    console.log(`🌀 Tentativa ${retries + 1} para encontrar <select name="problem">`);
+  
+    try {
+      await page.goto('http://localhost:8000/boca/');
+      await page.locator('input[name="name"]').fill('bot');
+      await page.locator('input[name="password"]').fill('boca');
+      await page.getByRole('button', { name: 'Login' }).click();
+  
+      await page.getByRole('link', { name: 'Problems' }).click();
+      await page.getByRole('cell', { name: 'Runs' }).click();
+  
+      await page.locator('select[name="problem"]').selectOption('1', { timeout: 10000 });
+  
+      problemOptionVisible = true;
+      console.log('✅ Problema 1 encontrado com sucesso');
+    } catch (error) {
+      console.log('⚠️ Problema ainda não disponível. Tentando novamente...');
+      retries++;
+      await page.waitForTimeout(2000);
+    }
+  }
+
+if (!problemOptionVisible) {
+  throw new Error('❌ Não foi possível encontrar o problema 1 após várias tentativas');
+}
   // Submeter soluções em loop
   for (const dirName of exercises) {
     // Encontrar submissão que tem o mesmo problemname
