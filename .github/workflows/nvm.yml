@@ -73,12 +73,13 @@ jobs:
           cp screenshot.png ../student
       - name: Log Jail Output
         run: docker logs $(docker ps -q --filter "name=boca-jail")
-      - name: Copy Boca Jail tmp files
+      - name: Copy stdout/stderr from jail if needed
         run: |
+          mkdir -p saida
           CONTAINER_ID=$(docker ps -q --filter "name=boca-jail")
-          mkdir -p boca_jail_tmp
-          docker cp $CONTAINER_ID:/home/bocajail/tmp ./bocajailtmp
-          cp -r bocajailtmp student/
+          # Copia stdout0 e stderr0 se existirem
+          docker cp $CONTAINER_ID:/home/bocajail/tmp/stdout0 ./saida/ || true
+          docker cp $CONTAINER_ID:/home/bocajail/tmp/stderr0 ./saida/ || true
       - name: Commit result as message
         run: |
           cd student/
@@ -91,21 +92,27 @@ jobs:
 
           if [[ "$RESULT" == "YES" ]]; then
             MESSAGE="🎈 YES – Submissão aceita"
+              if [[ -f ans.c ]]; then
+                echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
+              fi
+              git commit --allow-empty -m "$MESSAGE"
+              git push
+              exit 0
           elif [[ "$RESULT" == "" ]]; then
             MESSAGE="❓ Resultado não encontrado no log"
           else
             MESSAGE="❌ $RESULT"
-          fi
-          # Adiciona comentário no início do código
-          if [[ -f ans.c ]]; then
-            echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
-          fi
+            fi
+            # Adiciona comentário no início do código
+            if [[ -f ans.c ]]; then
+              echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
+            fi
 
-          echo "Commit message: $MESSAGE"
-          git add ans.c
-          git add screenshot.png
-          git add bocajailtmp
-          git commit --allow-empty -m "$MESSAGE"
-          git push
+            echo "Commit message: $MESSAGE"
+            git add ans.c
+            git add screenshot.png
+            git add saida/
+            git commit --allow-empty -m "$MESSAGE"
+            git push
 
       
