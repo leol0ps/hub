@@ -99,7 +99,7 @@ jobs:
             echo "🎯 Tentativa $ATTEMPT de $MAX_ATTEMPTS"
             npx playwright test 2>&1 | tee log.txt
       
-            if grep -q "Problem option found!" log.txt; then
+            if grep -q "opção(ões) encontrada(s)" log.txt; then
               echo "✅ Teste bem-sucedido!"
               break
             else
