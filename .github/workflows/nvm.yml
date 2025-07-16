@@ -51,10 +51,6 @@ jobs:
             echo "Exercícios modificados:"
             cat exercises.txt
             cp exercises.txt ../problem/
-      - name: Build boca-jail-fixed image
-        run: |
-          cd hub
-          docker build -f boca-jail.Dockerfile -t boca-jail-fixed .
       - name: Updocker
         shell: bash
         run: |

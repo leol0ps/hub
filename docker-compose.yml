@@ -25,7 +25,7 @@ services:
 
   # BOCA Judge Container (Jail)
   boca-jail:
-    image: boca-jail-fixed
+    image: leol0ps/boca-jail:latest
     privileged: true
     depends_on:
       - boca-db
