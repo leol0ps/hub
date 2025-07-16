@@ -61,6 +61,8 @@ test('Submeter vários problemas com base no JSON', async ({ page }) => {
   await page.locator('input[name="autojudge"]').check();
   page.once('dialog', async dialog => await dialog.accept());
   await page.getByRole('button', { name: 'Send' }).click();
+  console.log('🕒 Aguardando o BOCA registrar os problemas...');
+  await page.waitForTimeout(5000); // aguarda 5 segundos
 });
 test('Submit solutions and get results', async ({ page }) => {
   test.setTimeout(180_000);
