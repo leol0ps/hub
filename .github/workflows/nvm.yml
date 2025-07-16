@@ -78,8 +78,9 @@ jobs:
           mkdir -p saida
           CONTAINER_ID=$(docker ps -q --filter "name=boca-jail")
           # Copia stdout0 e stderr0 se existirem
-          docker cp $CONTAINER_ID:/home/bocajail/tmp/stdout0 ./saida/ || true
-          docker cp $CONTAINER_ID:/home/bocajail/tmp/stderr0 ./saida/ || true
+          docker cp $CONTAINER_ID:/home/bocajail/tmp/stdout ./saida/ || true
+          docker cp $CONTAINER_ID:/home/bocajail/tmp/stderr ./saida/ || true
+          mv saida student
       - name: Commit result as message
         run: |
           cd student/
