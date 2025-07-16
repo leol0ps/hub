@@ -99,7 +99,7 @@ test('Submit solution and check result', async ({ page }) => {
     
 
     let problemOptionVisible = false;
-    const maxRetries = 100;
+    const maxRetries = 50;
     let retries = 0;
 
     while (!problemOptionVisible && retries < maxRetries) {
@@ -131,7 +131,7 @@ test('Submit solution and check result', async ({ page }) => {
         } catch {
           console.log('Logout failed or already logged out');
         }
-        await page.waitForTimeout(500); // wait before retrying
+        await page.waitForTimeout(3000); // wait before retrying
         retries++;
       }
     }
