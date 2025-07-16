@@ -96,11 +96,15 @@ jobs:
           else
             MESSAGE="❌ $RESULT"
           fi
+          # Adiciona comentário no início do código
+          if [[ -f ans.c ]]; then
+            echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
+          fi
 
           echo "Commit message: $MESSAGE"
+          git add ans.c
           git add screenshot.png
           git add bocajailtmp
-          git commit -m "answer"
           git commit --allow-empty -m "$MESSAGE"
           git push
 
