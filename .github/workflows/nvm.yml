@@ -53,7 +53,7 @@ jobs:
         run: | 
           ls
           cd student/
-          cp ans.c ../problem/ 
+          cp problemas ../problem/ 
           cd ..
           cp hub/contest.spec.ts problem/
           cd problem/
@@ -76,55 +76,39 @@ jobs:
         run: |
           cd problem/
           npx playwright test 2>&1| tee log.txt
-          cp log.txt ../student
-          cp screenshot.png ../student
-      - name: Extract BOCA temp directory and copy stdout/stderr
-        run: |
-          CONTAINER_ID=$(docker ps -q --filter "name=boca-jail")
-          BOCA_DIR=$(docker logs $CONTAINER_ID 2>&1 | grep -oP 'Using directory \K\S+' | tail -1)
-          BOCA_DIR_BASENAME=$(basename "$BOCA_DIR")
-          echo "BOCA_DIR_BASENAME=$BOCA_DIR_BASENAME" >> $GITHUB_ENV
-          mkdir -p saida
-          docker cp $CONTAINER_ID:/home/bocajail/tmp/$BOCA_DIR_BASENAME/stdout ./saida/stdout || true
-          docker cp $CONTAINER_ID:/home/bocajail/tmp/$BOCA_DIR_BASENAME/stderr ./saida/stderr || true
-          cp -r saida student/
-
       - name: Log Jail Output
         run: docker logs $(docker ps -q --filter "name=boca-jail")
-      - name: Commit result as message
+      - name: Commit individual para cada exercício
         run: |
           cd student/
           git config --global user.name "leol0ps"
           git config --global user.email "leotimao2@hotmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
 
-          # Extrai linha com resultado do log
-          RESULT=$(grep -E 'Found "(YES|NO[^"]*)"' log.txt | head -n1 | cut -d'"' -f2)
+          while IFS= read -r EXER; do
+            RESPOSTA_FILE="../problem/problemas/$EXER/resposta.txt"
+            DESTINO="problemas/$EXER/resposta.txt"
+            
+            if [[ -f "$RESPOSTA_FILE" ]]; then
+              mkdir -p "problemas/$EXER"
+              cp "$RESPOSTA_FILE" "$DESTINO"
 
-          if [[ "$RESULT" == "YES" ]]; then
-            MESSAGE="🎈 YES – Submissão aceita"
-              if [[ -f ans.c ]]; then
-                echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
+              RAW_RESULT=$(cat "$RESPOSTA_FILE")
+              
+              if [[ "$RAW_RESULT" == "YES" ]]; then
+                MESSAGE="🎈 YES – Submissão aceita"
+              elif [[ "$RAW_RESULT" == "" ]]; then
+                MESSAGE="❓ Resultado não encontrado no log"
+              else
+                MESSAGE="❌ $RAW_RESULT"
               fi
-              git add ans.c
+
+              git add "$DESTINO"
               git commit --allow-empty -m "$MESSAGE"
-              git push
-              exit 0
-          elif [[ "$RESULT" == "" ]]; then
-            MESSAGE="❓ Resultado não encontrado no log"
-          else
-            MESSAGE="❌ $RESULT"
+            else
+              echo "⚠️ Arquivo de resposta não encontrado para $EXER"
             fi
-            # Adiciona comentário no início do código
-            if [[ -f ans.c ]]; then
-              echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
-            fi
+          done < ../problem/exercises.txt
 
-            echo "Commit message: $MESSAGE"
-            git add ans.c
-            git add screenshot.png
-            git add saida
-            git commit --allow-empty -m "$MESSAGE"
-            git push
+          git push
 
-      
