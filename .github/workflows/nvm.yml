@@ -11,9 +11,13 @@ jobs:
     steps:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: echo ${{ github.event.inputs.distinct_id }}
-      - name: Checkout
-        run: |
-          git clone https://${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}.git
+      - name: Checkout student repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.repo }}
+          path: student
+          token: ${{ secrets.token }}
+          fetch-depth: 0 
           
         
       - name: hub
