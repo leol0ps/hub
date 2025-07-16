@@ -82,6 +82,8 @@ test('Submit solutions and get results', async ({ page }) => {
 
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.getByRole('link', { name: 'Runs' }).click();
+  await page.waitForSelector('form[action="run.php"]', { timeout: 5000 });
+  await page.waitForSelector('select[name="problem"]', { timeout: 5000 });
   let problemOptionVisible = false;
   const maxRetries = 2;
   let retries = 0;
