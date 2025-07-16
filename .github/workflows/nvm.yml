@@ -67,6 +67,7 @@ jobs:
           cut -d'/' -f2 filtered.txt | sort -u > exercises.txt
           echo "Exercícios modificados:"
           cat exercises.txt
+          cp exercises.txt problem/
 
 
           
