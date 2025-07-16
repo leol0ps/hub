@@ -56,6 +56,7 @@ jobs:
         run: |
             cp hub/docker-compose.yml problem/ 
             cd problem/
+            docker pull leol0ps/boca-jail:latest
             docker compose up -d
       - name: Install dependencies
         uses: actions/setup-node@v4
