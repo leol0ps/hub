@@ -94,13 +94,11 @@ jobs:
           cd problem/
           npx playwright test contest.spec.ts -g "Submeter vários problemas com base no JSON" 
           ATTEMPT=1
-          MAX_ATTEMPTS=5
+          MAX_ATTEMPTS=3
           set +e
           while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
             echo "🎯 Tentativa $ATTEMPT de $MAX_ATTEMPTS"
             npx playwright test contest.spec.ts -g "Submit solutions and get results" 2>&1 | tee log.txt
-            echo "⌛ Esperando o BOCA carregar problemas..."
-            sleep 15
       
             if grep -q "opção(ões) encontrada(s)" log.txt; then
               echo "✅ Teste bem-sucedido!"
