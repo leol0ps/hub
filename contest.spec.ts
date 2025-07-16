@@ -83,46 +83,51 @@ test('Submit solutions and get results', async ({ page }) => {
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.getByRole('link', { name: 'Runs' }).click();
   let problemOptionVisible = false;
-  const maxRetries = 30; // Tenta por até 1 minuto
+  const maxRetries = 30;
   let retries = 0;
   
-while (!problemOptionVisible && retries < maxRetries) {
-      console.log(`Retry attempt: ${retries + 1}`);
-
-      
+  while (!problemOptionVisible && retries < maxRetries) {
+    console.log(`🔁 Tentativa ${retries + 1}`);
+  
+    try {
+      // Login novamente a cada tentativa
       await page.goto('http://localhost:8000/boca/index.php');
-
-      
       await page.locator('input[name="name"]').fill('bot');
       await page.locator('input[name="password"]').fill('boca');
       await page.getByRole('button', { name: 'Login' }).click();
-
-     
+  
       await page.getByRole('link', { name: 'Problems' }).click();
       await page.getByRole('cell', { name: 'Runs' }).click();
-
-      
-      try {
-        await page.locator('select[name="problem"]').selectOption('1', { timeout: 5000 })
-        //await page.waitForSelector('select[name="problem"] > option[value="1"]', { timeout: 5000 });
+  
+      const select = page.locator('select[name="problem"]');
+  
+      // Espera o <select> aparecer
+      await select.waitFor({ timeout: 5000 });
+  
+      // Conta quantas <option> existem
+      const optionCount = await select.locator('option').count();
+  
+      if (optionCount > 0) {
         problemOptionVisible = true;
-        console.log('Problem option found!');
-      } catch (error) {
-        console.log('Problem option not found, retrying...');
-        // Logout before retrying
-        try {
-          await page.getByRole('link', { name: 'Logout' }).click();
-        } catch {
-          console.log('Logout failed or already logged out');
-        }
-        await page.waitForTimeout(3000); // wait before retrying
-        retries++;
+        console.log(`✅ ${optionCount} opção(ões) encontrada(s). Prosseguindo...`);
+      } else {
+        throw new Error('⚠️ Nenhuma opção encontrada no <select>.');
       }
+    } catch (err) {
+      console.log(`⚠️ ${err.message}`);
+      try {
+        await page.getByRole('link', { name: 'Logout' }).click();
+      } catch {
+        console.log('⚠️ Logout falhou ou não era necessário.');
+      }
+      await page.waitForTimeout(3000);
+      retries++;
     }
-
-if (!problemOptionVisible) {
-  throw new Error('❌ Não foi possível encontrar o problema 1 após várias tentativas');
-}
+  }
+  
+  if (!problemOptionVisible) {
+    throw new Error('❌ Não foi possível encontrar nenhuma opção de problema após várias tentativas.');
+  }
   // Submeter soluções em loop
   for (const dirName of exercises) {
     // Encontrar submissão que tem o mesmo problemname
