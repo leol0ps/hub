@@ -84,13 +84,35 @@ jobs:
           cd problem/
           ls
 
-
+      
           
-      - name: Run test
+
+
+      - name: Run test with retry
         shell: bash
         run: |
           cd problem/
-          npx playwright test 2>&1| tee log.txt
+          ATTEMPT=1
+          MAX_ATTEMPTS=2
+      
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "🎯 Tentativa $ATTEMPT de $MAX_ATTEMPTS"
+            npx playwright test 2>&1 | tee log.txt
+      
+            if grep -q "Problem option found!" log.txt; then
+              echo "✅ Teste bem-sucedido!"
+              break
+            else
+              echo "❌ Problema não encontrado. Tentando novamente..."
+              ((ATTEMPT++))
+              sleep 5
+            fi
+      
+            if [ $ATTEMPT -gt $MAX_ATTEMPTS ]; then
+              echo "❌ Erro após $MAX_ATTEMPTS tentativas. Falhando..."
+              exit 1
+            fi
+          done
       - name: Log Jail Output
         run: docker logs $(docker ps -q --filter "name=boca-jail")
       - name: Commit individual para cada exercício
