@@ -86,28 +86,39 @@ test('Submit solutions and get results', async ({ page }) => {
   const maxRetries = 30; // Tenta por até 1 minuto
   let retries = 0;
   
-  while (!problemOptionVisible && retries < maxRetries) {
-    console.log(`🌀 Tentativa ${retries + 1} para encontrar <select name="problem">`);
-  
-    try {
-      await page.goto('http://localhost:8000/boca/');
+while (!problemOptionVisible && retries < maxRetries) {
+      console.log(`Retry attempt: ${retries + 1}`);
+
+      
+      await page.goto('http://localhost:8000/boca/index.php');
+
+      
       await page.locator('input[name="name"]').fill('bot');
       await page.locator('input[name="password"]').fill('boca');
       await page.getByRole('button', { name: 'Login' }).click();
-  
+
+     
       await page.getByRole('link', { name: 'Problems' }).click();
       await page.getByRole('cell', { name: 'Runs' }).click();
-  
-      await page.locator('select[name="problem"]').selectOption('1', { timeout: 10000 });
-  
-      problemOptionVisible = true;
-      console.log('✅ Problema 1 encontrado com sucesso');
-    } catch (error) {
-      console.log('⚠️ Problema ainda não disponível. Tentando novamente...');
-      retries++;
-      await page.waitForTimeout(2000);
+
+      
+      try {
+        await page.locator('select[name="problem"]').selectOption('1', { timeout: 5000 })
+        //await page.waitForSelector('select[name="problem"] > option[value="1"]', { timeout: 5000 });
+        problemOptionVisible = true;
+        console.log('Problem option found!');
+      } catch (error) {
+        console.log('Problem option not found, retrying...');
+        // Logout before retrying
+        try {
+          await page.getByRole('link', { name: 'Logout' }).click();
+        } catch {
+          console.log('Logout failed or already logged out');
+        }
+        await page.waitForTimeout(3000); // wait before retrying
+        retries++;
+      }
     }
-  }
 
 if (!problemOptionVisible) {
   throw new Error('❌ Não foi possível encontrar o problema 1 após várias tentativas');
