@@ -99,6 +99,7 @@ jobs:
               if [[ -f ans.c ]]; then
                 echo "/* $MESSAGE */" | cat - ans.c > temp && mv temp ans.c
               fi
+              git add ans.c
               git commit --allow-empty -m "$MESSAGE"
               git push
               exit 0
