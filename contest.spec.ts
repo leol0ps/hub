@@ -85,7 +85,13 @@ test('Submit solutions and get results', async ({ page }) => {
 
   for (let i = 0; i < maxRetries; i++) {
     console.log(`🔁 Tentativa ${i + 1}`);
-
+    await page.getByRole('link', { name: 'Logout' }).click();
+    await page.goto('http://localhost:8000/boca/');
+    await page.locator('input[name="name"]').fill('bot');
+    await page.locator('input[name="password"]').fill('boca');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await page.getByRole('link', { name: 'Problems' }).click();
+    await page.getByRole('link', { name: 'Runs' }).click();
     try {
       const select = page.locator('select[name="problem"]');
       await select.waitFor({ timeout: 5000 });
