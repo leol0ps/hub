@@ -79,16 +79,29 @@ jobs:
           mkdir -p boca_jail_tmp
           docker cp $CONTAINER_ID:/home/bocajail/tmp ./bocajailtmp
           cp -r bocajailtmp student/
-      - name: Sending ansers to student repo  
+      - name: Commit result as message
         run: |
-          ls
           cd student/
           git config --global user.name "leol0ps"
           git config --global user.email "leotimao2@hotmail.com"
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
-          git add log.txt
+
+          # Extrai linha com resultado do log
+          RESULT=$(grep -E 'Found "(YES|NO[^"]*)"' log.txt | head -n1 | cut -d'"' -f2)
+
+          if [[ "$RESULT" == "YES" ]]; then
+            MESSAGE="🎈 YES – Submissão aceita"
+          elif [[ "$RESULT" == "" ]]; then
+            MESSAGE="❓ Resultado não encontrado no log"
+          else
+            MESSAGE="❌ $RESULT"
+          fi
+
+          echo "Commit message: $MESSAGE"
           git add screenshot.png
           git add bocajailtmp
           git commit -m "answer"
+          git commit --allow-empty -m "$MESSAGE"
           git push
+
       
