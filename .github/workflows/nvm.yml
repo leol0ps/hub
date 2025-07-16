@@ -121,7 +121,7 @@ jobs:
             echo "Commit message: $MESSAGE"
             git add ans.c
             git add screenshot.png
-            git add saida/
+            git add saida
             git commit --allow-empty -m "$MESSAGE"
             git push
 
