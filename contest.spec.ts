@@ -83,7 +83,7 @@ test('Submit solutions and get results', async ({ page }) => {
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.getByRole('link', { name: 'Runs' }).click();
   let problemOptionVisible = false;
-  const maxRetries = 30;
+  const maxRetries = 2;
   let retries = 0;
   
   while (!problemOptionVisible && retries < maxRetries) {

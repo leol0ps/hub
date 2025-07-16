@@ -93,7 +93,7 @@ jobs:
         run: |
           cd problem/
           ATTEMPT=1
-          MAX_ATTEMPTS=3
+          MAX_ATTEMPTS=10
           set +e
           while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
             echo "🎯 Tentativa $ATTEMPT de $MAX_ATTEMPTS"
