@@ -105,7 +105,7 @@ test('Submit solutions and get results', async ({ page }) => {
       await select.waitFor({ timeout: 5000 });
   
       // Conta quantas <option> existem
-      const optionCount = await select.locator('option').count();
+      const optionCount = await select.locator('option:not([value="-1"])').count();
   
       if (optionCount > 0) {
         problemOptionVisible = true;
