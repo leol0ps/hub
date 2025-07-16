@@ -53,7 +53,7 @@ jobs:
         run: | 
           ls
           cd student/
-          cp problemas ../problem/ 
+          cp -r problemas ../problem/ 
           cd ..
           cp hub/contest.spec.ts problem/
           cd problem/
