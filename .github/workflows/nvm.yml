@@ -30,27 +30,44 @@ jobs:
           repository: 'leol0ps/backup-tcc'
           token: '${{ secrets.BASE_REPO}}'
           persist-credentials: true
-      - name: Get changed .c files from last commit
-        id: changed_files
+      - name: Get changed files from last commit
+        id: verifica_extensoes
         run: |
-            cd student/
-            
-            # Tenta detectar alterações entre before e sha
-            # Se falhar, pega todos os arquivos modificados no último commit
-            git fetch origin main
-            if git cat-file -e ${{ github.event.before }} 2>/dev/null; then
-              git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
-            else
-              echo "⚠️ Commit anterior não encontrado, pegando modificações do último commit"
-              git diff --name-only HEAD~1 HEAD > changed_files.txt
-            fi
-            
-            # Filtra somente arquivos .c em subpastas dentro de problemas/
-            grep '^problemas/.*/.*\.c$' changed_files.txt > filtered.txt || true
-            cut -d'/' -f2 filtered.txt | sort -u > exercises.txt
-            echo "Exercícios modificados:"
-            cat exercises.txt
-            cp exercises.txt ../problem/
+          cd student/
+
+          # Detecta modificações
+          git fetch origin main
+          if git cat-file -e ${{ github.event.before }} 2>/dev/null; then
+            git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          else
+            echo "⚠️ Commit anterior não encontrado, pegando modificações do último commit"
+            git diff --name-only HEAD~1 HEAD > changed_files.txt
+          fi
+
+          echo "🔍 Arquivos modificados:"
+          cat changed_files.txt
+
+          # Verifica extensões permitidas no config do hub (problem/)
+          cd ../problem/
+          EXTENSOES=$(jq -r '.languages[].extension' config.json | sed 's/^/\\./' | paste -sd '|' -)
+          echo "Extensões permitidas: $EXTENSOES"
+          
+          cd ../student/
+
+          # Filtra apenas arquivos válidos em problemas/
+          grep '^problemas/.*/.*\.(${EXTENSOES})$' changed_files.txt > filtered.txt || true
+          cut -d'/' -f2 filtered.txt | sort -u > exercises.txt
+          echo "📁 Exercícios modificados:"
+          cat exercises.txt || echo "(nenhum)"
+
+          cp exercises.txt ../problem/
+
+          # Se nenhum exercício foi detectado, interrompe o workflow
+          if [ ! -s filtered.txt ]; then
+            echo "⛔ Nenhum arquivo com extensão permitida foi alterado. Encerrando workflow."
+            exit 0
+          fi
+
       - name: Updocker
         shell: bash
         run: |
