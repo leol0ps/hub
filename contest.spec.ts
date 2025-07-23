@@ -62,13 +62,24 @@ test('Submeter vários problemas com base no JSON', async ({ page }) => {
   page.once('dialog', async dialog => await dialog.accept());
   await page.getByRole('button', { name: 'Send' }).click();
 });
+
+interface Language {
+  name: string;
+  extension: string;
+  id: string;
+}
+
 test('Submit solutions and get results', async ({ page }) => {
   test.setTimeout(180_000);
 
-  // Ler json de submissões do prof
-  const submissaoData = JSON.parse(await fs.promises.readFile('submissoes.json', 'utf-8')) as Submission[];
+  // Lê o config.json com mapeamento de linguagens
+  const config = JSON.parse(await fs.promises.readFile('config.json', 'utf-8'));
+  const languageMap: Record<string, string> = {};
+  config.languages.forEach((lang: Language) => {
+    languageMap[lang.extension] = lang.id;
+  });
 
-  // Ler lista de exercícios alterados no último commit
+  // Lê a lista de exercícios modificados
   const exercises = (await fs.promises.readFile('exercises.txt', 'utf-8'))
     .split('\n')
     .map(line => line.trim())
@@ -83,125 +94,80 @@ test('Submit solutions and get results', async ({ page }) => {
   await page.getByRole('link', { name: 'Problems' }).click();
   await page.getByRole('link', { name: 'Runs' }).click();
   await page.waitForSelector('form[action="run.php"]', { timeout: 5000 });
-  await page.waitForSelector('select[name="problem"]', { timeout: 5000 });
-  let problemOptionVisible = false;
-  const maxRetries = 2;
-  let retries = 0;
-  
-  while (!problemOptionVisible && retries < maxRetries) {
-    console.log(`🔁 Tentativa ${retries + 1}`);
-  
-    try {
-      // Login novamente a cada tentativa
-      await page.goto('http://localhost:8000/boca/index.php');
-      await page.locator('input[name="name"]').fill('bot');
-      await page.locator('input[name="password"]').fill('boca');
-      await page.getByRole('button', { name: 'Login' }).click();
-  
-      await page.getByRole('link', { name: 'Problems' }).click();
-      await page.getByRole('cell', { name: 'Runs' }).click();
-  
-      const select = page.locator('select[name="problem"]');
-  
-      // Espera o <select> aparecer
-      await select.waitFor({ timeout: 5000 });
-  
-      // Conta quantas <option> existem
-      const optionCount = await select.locator('option:not([value="-1"])').count();
-  
-      if (optionCount > 0) {
-        problemOptionVisible = true;
-        console.log(`✅ ${optionCount} opção(ões) encontrada(s). Prosseguindo...`);
-      } else {
-        throw new Error('⚠️ Nenhuma opção encontrada no <select>.');
-      }
-    } catch (err) {
-      console.log(`⚠️ ${err.message}`);
-      try {
-        await page.getByRole('link', { name: 'Logout' }).click();
-      } catch {
-        console.log('⚠️ Logout falhou ou não era necessário.');
-      }
-      await page.waitForTimeout(3000);
-      retries++;
-    }
-  }
-  
-  if (!problemOptionVisible) {
-    throw new Error('❌ Não foi possível encontrar nenhuma opção de problema após várias tentativas.');
-  }
-  // Submeter soluções em loop
+
+  const select = page.locator('select[name="problem"]');
+  await select.waitFor({ timeout: 5000 });
+
+  const optionCount = await select.locator('option:not([value="-1"])').count();
+  if (optionCount === 0) throw new Error('❌ Nenhuma opção de problema disponível.');
+
+  // Submete uma solução por exercício
   for (const dirName of exercises) {
-    // Encontrar submissão que tem o mesmo problemname
-    const submissao = submissaoData.find(s => s.problemname === dirName);
-    if (!submissao) {
-      console.log(`Submissão para problema ${dirName} não encontrada no submissoes.json`);
+    const pasta = path.join('problemas', dirName);
+    const arquivos = await fs.promises.readdir(pasta);
+    const arquivoFonte = arquivos.find(a => a.includes('.') && !a.endsWith('.txt'));
+
+    if (!arquivoFonte) {
+      console.log(`⚠️ Nenhum arquivo-fonte encontrado na pasta ${pasta}`);
       continue;
     }
 
-    const sourceFilePath = path.join('problemas', dirName, '*.c');
+    const ext = path.extname(arquivoFonte).slice(1); // remove o ponto (ex: .c → c)
+    const languageId = languageMap[ext];
 
-    // Como não dá para usar wildcard no playwright para setInputFiles, vamos procurar o arquivo .c dentro da pasta
-    const files = await fs.promises.readdir(path.join('problemas', dirName));
-    const cFile = files.find(f => f.endsWith('.c'));
-    if (!cFile) {
-      console.log(`Arquivo .c não encontrado na pasta problema/${dirName}`);
+    if (!languageId) {
+      console.log(`⚠️ Extensão .${ext} não suportada no config.json – pulando ${arquivoFonte}`);
       continue;
     }
 
-    console.log(`Submetendo exercício ${dirName} usando arquivo ${cFile}`);
+    console.log(`🚀 Submetendo ${arquivoFonte} com linguagem ID ${languageId}`);
 
-    await page.locator('select[name="problem"]').selectOption(submissao.problemnumber);
-    await page.locator('select[name="language"]').selectOption(submissao.language);
-    await page.locator('input[name="sourcefile"]').setInputFiles(path.join('problemas', dirName, cFile));
+    await page.locator('select[name="problem"]').selectOption({ index: 0 }); // assume problema 1, ajustável se necessário
+    await page.locator('select[name="language"]').selectOption(languageId);
+    await page.locator('input[name="sourcefile"]').setInputFiles(path.join(pasta, arquivoFonte));
 
     page.once('dialog', async dialog => await dialog.accept());
     await page.getByRole('button', { name: 'Send' }).click();
 
-    // Pequena espera para não sobrecarregar o BOCA
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1000); // breve pausa entre submissões
   }
 
-  // Esperar todas as runs aparecerem (tempo arbitrário ou pode fazer espera inteligente)
-  await page.goto('http://localhost:8000/boca/team/run.php');
-  await page.waitForTimeout(10_000);
+  // Aguardando a correção automática
   await page.goto('http://localhost:8000/boca/team/run.php');
 
-// Espera todos os "Not answered yet" desaparecerem
-let stillWaiting = true;
-while (stillWaiting) {
-  try {
-    await page.waitForSelector('text="Not answered yet"', { timeout: 2000 });
-    console.log('Still waiting for autojudge...');
-  } catch (error) {
-    stillWaiting = false;
-    console.log('All runs judged.');
-  }
-  if (stillWaiting) {
-    await page.waitForTimeout(3000);
-    await page.goto('http://localhost:8000/boca/team/run.php');
-  }
-}
-  // Ler resultados da tabela runs
-  const runsCount = await page.locator('table tr').count();
-
-  // Mapeia resultado pela ordem da tabela, pulando o header (linha 1)
-  const results: string[] = [];
-  for (let i = 0; i < exercises.length; i++) {
-    const runRow = i + 2; // run 1 na linha 2, run 2 linha 3...
+  let stillWaiting = true;
+  while (stillWaiting) {
     try {
-      const text = await page.locator(`table tr:nth-child(${runRow}) td:nth-child(5)`).innerText();
-      results.push(text.trim());
+      await page.waitForSelector('text="Not answered yet"', { timeout: 2000 });
+      console.log('⌛ Aguardando autojudge...');
+    } catch {
+      stillWaiting = false;
+      console.log('✅ Todas as submissões foram julgadas.');
+    }
+
+    if (stillWaiting) {
+      await page.waitForTimeout(3000);
+      await page.goto('http://localhost:8000/boca/team/run.php');
+    }
+  }
+
+  // Lê resultados da tabela e grava no resposta.txt de cada exercício
+  const results: string[] = [];
+  const runCount = await page.locator('table tr').count();
+
+  for (let i = 2; i < runCount + 1; i++) {
+    try {
+      const status = await page.locator(`table tr:nth-child(${i}) td:nth-child(5)`).innerText();
+      results.push(status.trim());
     } catch {
       results.push('Resultado não encontrado');
     }
   }
 
-  // Gravar resultado em resposta.txt dentro da pasta de cada exercício
   for (let i = 0; i < exercises.length; i++) {
     const filePath = path.join('problemas', exercises[i], 'resposta.txt');
-    await fs.promises.writeFile(filePath, results[i]);
-    console.log(`Resposta para ${exercises[i]} salva em ${filePath}`);
+    await fs.promises.writeFile(filePath, results[i] || 'Resultado não encontrado');
+    console.log(`📄 Resultado salvo em ${filePath}`);
   }
 
   // Logout
