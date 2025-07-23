@@ -49,13 +49,13 @@ jobs:
 
           # Verifica extensões permitidas no config do hub (problem/)
           cd ../problem/
-          EXTENSOES=$(jq -r '.languages[].extension' config.json | sed 's/^/\\./' | paste -sd '|' -)
+          EXTENSOES=$(jq -r '.languages[].extension' config.json | paste -sd '|' -)
           echo "Extensões permitidas: $EXTENSOES"
           
           cd ../student/
 
           # Filtra apenas arquivos válidos em problemas/
-          grep '^problemas/.*/.*\.(${EXTENSOES})$' changed_files.txt > filtered.txt || true
+          grep -Ei "^problemas/.*/.*\.(${EXTENSOES})$" changed_files.txt > filtered.txt || true
           cut -d'/' -f2 filtered.txt | sort -u > exercises.txt
           echo "📁 Exercícios modificados:"
           cat exercises.txt || echo "(nenhum)"
@@ -65,7 +65,7 @@ jobs:
           # Se nenhum exercício foi detectado, interrompe o workflow
           if [ ! -s filtered.txt ]; then
             echo "⛔ Nenhum arquivo com extensão permitida foi alterado. Encerrando workflow."
-            exit 0
+            exit 1
           fi
 
       - name: Updocker
