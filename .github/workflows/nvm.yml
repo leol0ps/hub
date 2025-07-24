@@ -139,15 +139,30 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.token }}@github.com/${{ github.event.inputs.repo }}
 
           while IFS= read -r EXER; do
-            RESPOSTA_FILE="../problem/problemas/$EXER/resposta.txt"
-            DESTINO="problemas/$EXER/resposta.txt"
-            
+            BASE="../problem/problemas/$EXER"
+            DEST="problemas/$EXER"
+
+            RESPOSTA_FILE="$BASE/resposta.txt"
+            STDOUT_FILE="$BASE/stdout.txt"
+            STDERR_FILE="$BASE/stderr.txt"
+
             if [[ -f "$RESPOSTA_FILE" ]]; then
-              mkdir -p "problemas/$EXER"
-              cp "$RESPOSTA_FILE" "$DESTINO"
+              mkdir -p "$DEST"
+              cp "$RESPOSTA_FILE" "$DEST/resposta.txt"
+
+              # Copiar stdout e stderr se existirem
+              if [[ -f "$STDOUT_FILE" ]]; then
+                cp "$STDOUT_FILE" "$DEST/stdout.txt"
+                git add "$DEST/stdout.txt"
+              fi
+
+              if [[ -f "$STDERR_FILE" ]]; then
+                cp "$STDERR_FILE" "$DEST/stderr.txt"
+                git add "$DEST/stderr.txt"
+              fi
 
               RAW_RESULT=$(cat "$RESPOSTA_FILE")
-              
+
               if [[ "$RAW_RESULT" == "YES" ]]; then
                 MESSAGE="🎈 YES – Submissão aceita"
               elif [[ "$RAW_RESULT" == "" ]]; then
@@ -156,7 +171,7 @@ jobs:
                 MESSAGE="❌ $RAW_RESULT"
               fi
 
-              git add "$DESTINO"
+              git add "$DEST/resposta.txt"
               git commit --allow-empty -m "$MESSAGE"
             else
               echo "⚠️ Arquivo de resposta não encontrado para $EXER"
@@ -164,4 +179,5 @@ jobs:
           done < ../problem/exercises.txt
 
           git push
+
 
