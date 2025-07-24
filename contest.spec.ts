@@ -72,7 +72,7 @@ interface Language {
 
 test('Submit solutions and get results', async ({ page }) => {
   test.setTimeout(180_000);
-  const configPath = path.join('problem', 'config.json');
+  const configPath = path.join('config.json');
   const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
   // Ler json de submissões do prof
   const submissaoData = JSON.parse(await fs.promises.readFile('submissoes.json', 'utf-8')) as Submission[];
