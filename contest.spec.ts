@@ -236,8 +236,6 @@ test('Submit solutions and get results', async ({ page }) => {
     const stderr = stderrResp ? await stderrResp.text() : '';
     stdouts.push(stdout);
     stderrs.push(stderr);
-
-    await runPage.close();
   }
   results.reverse();
   stdouts.reverse();
