@@ -239,6 +239,9 @@ test('Submit solutions and get results', async ({ page }) => {
 
     await runPage.close();
   }
+  results.reverse();
+  stdouts.reverse();
+  stderrs.reverse();
 
   // Salvar resultado em problemas/<dir>/resposta.txt, stdout.txt, stderr.txt
   for (let i = 0; i < exercises.length; i++) {
