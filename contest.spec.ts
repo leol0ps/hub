@@ -69,11 +69,11 @@ interface Language {
   id: string;
 }
 
-import config from './problem/config.json'; // Importa o novo config.json
 
 test('Submit solutions and get results', async ({ page }) => {
   test.setTimeout(180_000);
-
+  const configPath = path.join('problem', 'config.json');
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
   // Ler json de submissões do prof
   const submissaoData = JSON.parse(await fs.promises.readFile('submissoes.json', 'utf-8')) as Submission[];
 
