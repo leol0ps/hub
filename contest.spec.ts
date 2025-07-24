@@ -206,26 +206,27 @@ test('Submit solutions and get results', async ({ page }) => {
   const selectedRuns = runLinks.slice(-exercises.length);
 
   // Iterar sobre os links das submissões na ordem correta
-  for (let i = 0; i < selectedRuns.length; i++) {
-    const link = selectedRuns[i];
-    const href = await link.getAttribute('href');
-    if (!href) {
-      results.push('Run link não encontrado');
-      stdouts.push('');
-      stderrs.push('');
-      continue;
-    }
+for (let i = 0; i < selectedRuns.length; i++) {
+  const link = selectedRuns[i];
+  const href = await link.getAttribute('href');
+  if (!href) {
+    results.push('Run link não encontrado');
+    stdouts.push('');
+    stderrs.push('');
+    continue;
+  }
 
-    const runPage = await page.context().newPage();
-    await runPage.goto(`http://localhost:8000/boca/admin/${href}`);
+  const runPage = await page.context().newPage();
+  await runPage.goto(`http://localhost:8000/boca/admin/${href}`);
 
-    // Pegando o resultado textual (ex: NO - Compilation error)
-    const answerText = await runPage.locator('select[name="answer"] option[selected]').textContent();
-    results.push(answerText?.trim() || 'Resultado não encontrado');
+  // Pegando o resultado textual (ex: NO - Compilation error)
+  const answerText = await runPage.locator('select[name="answer"] option[selected]').textContent();
+  results.push(answerText?.trim() || 'Resultado não encontrado');
 
-    // Baixando stdout e stderr
-    const stdoutLink = await runPage.getByRole('link', { name: 'stdout' }).getAttribute('href');
-    const stderrLink = await runPage.getByRole('link', { name: 'stderr' }).getAttribute('href');
+  try {
+    // Tentando obter os links com timeout de 5 segundos
+    const stdoutLink = await runPage.getByRole('link', { name: 'stdout' }).getAttribute('href', { timeout: 5000 });
+    const stderrLink = await runPage.getByRole('link', { name: 'stderr' }).getAttribute('href', { timeout: 5000 });
 
     const [stdoutResp, stderrResp] = await Promise.all([
       stdoutLink ? runPage.request.get(`http://localhost:8000/boca/admin/${stdoutLink}`) : Promise.resolve(null),
@@ -236,7 +237,13 @@ test('Submit solutions and get results', async ({ page }) => {
     const stderr = stderrResp ? await stderrResp.text() : '';
     stdouts.push(stdout);
     stderrs.push(stderr);
+  } catch (e) {
+    console.warn(`⚠️ Falha ao buscar stdout/stderr da run ${href}: ${e.message}`);
+    stdouts.push('');
+    stderrs.push('');
   }
+}
+
   results.reverse();
   stdouts.reverse();
   stderrs.reverse();
