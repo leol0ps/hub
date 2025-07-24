@@ -185,23 +185,67 @@ test('Submit solutions and get results', async ({ page }) => {
     }
   }
 
-  // Lê os resultados (assumindo que estão em ordem)
-  const runsCount = await page.locator('table tr').count();
+  // Acessar interface de admin e login
+  await page.goto('http://localhost:8000/boca/');
+  await page.locator('input[name="name"]').fill('admin');
+  await page.locator('input[name="password"]').fill('boca');
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'Runs' }).click();
+
+  // Espera a tabela de submissões carregar
+  await page.waitForSelector('form[action="run.php"] table');
+
+  // Seleciona os links da primeira coluna da tabela de submissões
+  const runLinks = await page.locator('form[action="run.php"] table tr td:first-child a').all();
+
   const results: string[] = [];
-  for (let i = 0; i < exercises.length; i++) {
-    const row = i + 2; // pula cabeçalho
-    try {
-      const text = await page.locator(`table tr:nth-child(${row}) td:nth-child(5)`).innerText();
-      results.push(text.trim());
-    } catch {
-      results.push('Resultado não encontrado');
+  const stdouts: string[] = [];
+  const stderrs: string[] = [];
+
+  // Pega as últimas N submissões (exercises.length), em ordem inversa (mais antigas por último)
+  const selectedRuns = runLinks.slice(-exercises.length);
+
+  // Iterar sobre os links das submissões na ordem correta
+  for (let i = 0; i < selectedRuns.length; i++) {
+    const link = selectedRuns[i];
+    const href = await link.getAttribute('href');
+    if (!href) {
+      results.push('Run link não encontrado');
+      stdouts.push('');
+      stderrs.push('');
+      continue;
     }
+
+    const runPage = await page.context().newPage();
+    await runPage.goto(`http://localhost:8000/boca/admin/${href}`);
+
+    // Pegando o resultado textual (ex: NO - Compilation error)
+    const answerText = await runPage.locator('select[name="answer"] option[selected]').textContent();
+    results.push(answerText?.trim() || 'Resultado não encontrado');
+
+    // Baixando stdout e stderr
+    const stdoutLink = await runPage.getByRole('link', { name: 'stdout' }).getAttribute('href');
+    const stderrLink = await runPage.getByRole('link', { name: 'stderr' }).getAttribute('href');
+
+    const [stdoutResp, stderrResp] = await Promise.all([
+      stdoutLink ? runPage.request.get(`http://localhost:8000/boca/admin/${stdoutLink}`) : Promise.resolve(null),
+      stderrLink ? runPage.request.get(`http://localhost:8000/boca/admin/${stderrLink}`) : Promise.resolve(null),
+    ]);
+
+    const stdout = stdoutResp ? await stdoutResp.text() : '';
+    const stderr = stderrResp ? await stderrResp.text() : '';
+    stdouts.push(stdout);
+    stderrs.push(stderr);
+
+    await runPage.close();
   }
 
-  // Salva cada resultado em resposta.txt
+  // Salvar resultado em problemas/<dir>/resposta.txt, stdout.txt, stderr.txt
   for (let i = 0; i < exercises.length; i++) {
-    const filePath = path.join('problemas', exercises[i], 'resposta.txt');
-    await fs.promises.writeFile(filePath, results[i]);
-    console.log(`📄 Resultado salvo em ${filePath}`);
+    const basePath = path.join('problemas', exercises[i]);
+    await fs.promises.writeFile(path.join(basePath, 'resposta.txt'), results[i]);
+    await fs.promises.writeFile(path.join(basePath, 'stdout.txt'), stdouts[i]);
+    await fs.promises.writeFile(path.join(basePath, 'stderr.txt'), stderrs[i]);
+    console.log(`📄 Resultado salvo em ${basePath}/resposta.txt`);
   }
 });
