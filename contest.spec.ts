@@ -170,6 +170,4 @@ test('Submit solutions and get results', async ({ page }) => {
     console.log(`📄 Resultado salvo em ${filePath}`);
   }
 
-  // Logout
-  await page.getByRole('link', { name: 'Logout' }).click();
 });
