@@ -192,13 +192,15 @@ test('Submit solutions and get results', async ({ page }) => {
   }
 
   // Lê os resultados (assumindo que estão em ordem)
-  const results: string[] = [];
-  const runCount = await page.locator('table tr').count();
+  const runsCount = await page.locator('table tr').count();
 
-  for (let i = 2; i < runCount + 1; i++) {
+  // Mapeia resultado pela ordem da tabela, pulando o header (linha 1)
+  const results: string[] = [];
+  for (let i = 0; i < exercises.length; i++) {
+    const runRow = i + 2; // run 1 na linha 2, run 2 linha 3...
     try {
-      const status = await page.locator(`table tr:nth-child(${i}) td:nth-child(5)`).innerText();
-      results.push(status.trim());
+      const text = await page.locator(`table tr:nth-child(${runRow}) td:nth-child(5)`).innerText();
+      results.push(text.trim());
     } catch {
       results.push('Resultado não encontrado');
     }
@@ -206,7 +208,7 @@ test('Submit solutions and get results', async ({ page }) => {
 
   for (let i = 0; i < exercises.length; i++) {
     const filePath = path.join('problemas', exercises[i], 'resposta.txt');
-    await fs.promises.writeFile(filePath, results[i] || 'Resultado não encontrado');
+    await fs.promises.writeFile(filePath, results[i]);
     console.log(`📄 Resultado salvo em ${filePath}`);
   }
 });
