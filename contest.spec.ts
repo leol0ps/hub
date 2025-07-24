@@ -63,22 +63,26 @@ test('Submeter vários problemas com base no JSON', async ({ page }) => {
   await page.getByRole('button', { name: 'Send' }).click();
 });
 
+
+
+
 interface Language {
   name: string;
   extension: string;
   id: string;
 }
 
-
 test('Submit solutions and get results', async ({ page }) => {
   test.setTimeout(180_000);
+
   const configPath = path.join('config.json');
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-  // Ler json de submissões do prof
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8')) as { languages: Language[] };
+
+  // Lê json de submissões
   const submissaoData = JSON.parse(await fs.promises.readFile('submissoes.json', 'utf-8')) as Submission[];
 
-  // Ler lista de exercícios alterados no último commit
-  const exercises = (await fs.promises.readFile('exercises.txt', 'utf-8'))
+  // Lê arquivos modificados (com caminho completo)
+  const changedFiles = (await fs.promises.readFile('changed_files.txt', 'utf-8'))
     .split('\n')
     .map(line => line.trim())
     .filter(line => line.length > 0);
@@ -100,7 +104,6 @@ test('Submit solutions and get results', async ({ page }) => {
 
   while (!problemOptionVisible && retries < maxRetries) {
     console.log(`🔁 Tentativa ${retries + 1}`);
-
     try {
       await page.goto('http://localhost:8000/boca/index.php');
       await page.locator('input[name="name"]').fill('bot');
@@ -136,39 +139,30 @@ test('Submit solutions and get results', async ({ page }) => {
     throw new Error('❌ Não foi possível encontrar nenhuma opção de problema após várias tentativas.');
   }
 
-  // Submeter soluções
-  for (const dirName of exercises) {
+  const exercises: string[] = [];
+
+  for (const filepath of changedFiles) {
+    const filename = path.basename(filepath); // ans.py
+    const extension = path.extname(filename).slice(1); // py
+    const dirName = path.basename(path.dirname(filepath)); // L1_3
     const submissao = submissaoData.find(s => s.problemname === dirName);
-    if (!submissao) {
-      console.log(`⚠️ Submissão para problema ${dirName} não encontrada no submissoes.json`);
+    const linguagem = config.languages.find(l => l.extension === extension);
+
+    if (!submissao || !linguagem) {
+      console.log(`⚠️ Dados insuficientes para submeter ${filename}`);
       continue;
     }
 
-    const pasta = path.join('problemas', dirName);
-    const arquivos = await fs.promises.readdir(pasta);
-    const arquivoFonte = arquivos.find(a => /\.[a-z]+$/i.test(a));
-    if (!arquivoFonte) {
-      console.log(`⚠️ Nenhum arquivo fonte encontrado em ${pasta}`);
-      continue;
-    }
-
-    const extensao = path.extname(arquivoFonte).slice(1); // tira o ponto
-    const linguagem = config.languages.find(l => l.extension === extensao);
-    if (!linguagem) {
-      console.log(`⚠️ Extensão .${extensao} não mapeada no config.json`);
-      continue;
-    }
-
-    console.log(`🚀 Submetendo ${arquivoFonte} com linguagem ID ${linguagem.id}`);
-
+    console.log(`🚀 Submetendo ${filename} com linguagem ID ${linguagem.id}`);
     await page.locator('select[name="problem"]').selectOption(submissao.problemnumber);
     await page.locator('select[name="language"]').selectOption(linguagem.id);
-    await page.locator('input[name="sourcefile"]').setInputFiles(path.join(pasta, arquivoFonte));
+    await page.locator('input[name="sourcefile"]').setInputFiles(filepath);
 
     page.once('dialog', async dialog => await dialog.accept());
     await page.getByRole('button', { name: 'Send' }).click();
-
     await page.waitForTimeout(1000);
+
+    exercises.push(dirName);
   }
 
   // Esperar BOCA julgar
@@ -193,19 +187,18 @@ test('Submit solutions and get results', async ({ page }) => {
 
   // Lê os resultados (assumindo que estão em ordem)
   const runsCount = await page.locator('table tr').count();
-
-  // Mapeia resultado pela ordem da tabela, pulando o header (linha 1)
   const results: string[] = [];
   for (let i = 0; i < exercises.length; i++) {
-    const runRow = i + 2; // run 1 na linha 2, run 2 linha 3...
+    const row = i + 2; // pula cabeçalho
     try {
-      const text = await page.locator(`table tr:nth-child(${runRow}) td:nth-child(5)`).innerText();
+      const text = await page.locator(`table tr:nth-child(${row}) td:nth-child(5)`).innerText();
       results.push(text.trim());
     } catch {
       results.push('Resultado não encontrado');
     }
   }
 
+  // Salva cada resultado em resposta.txt
   for (let i = 0; i < exercises.length; i++) {
     const filePath = path.join('problemas', exercises[i], 'resposta.txt');
     await fs.promises.writeFile(filePath, results[i]);
