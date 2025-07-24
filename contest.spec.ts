@@ -155,19 +155,17 @@ test('Submit solutions and get results', async ({ page }) => {
   const results: string[] = [];
   const runCount = await page.locator('table tr').count();
 
-  for (let i = 2; i < runCount + 1; i++) {
-    try {
-      const status = await page.locator(`table tr:nth-child(${i}) td:nth-child(5)`).innerText();
-      results.push(status.trim());
-    } catch {
-      results.push('Resultado não encontrado');
-    }
+  if (results.length < exercises.length) {
+    console.warn('⚠️ Número de resultados menor que o número de exercícios. Pode haver inconsistência.');
   }
 
+  // Para cada exercício, escreve o resultado na ordem correspondente
   for (let i = 0; i < exercises.length; i++) {
     const filePath = path.join('problemas', exercises[i], 'resposta.txt');
-    await fs.promises.writeFile(filePath, results[i] || 'Resultado não encontrado');
+    const result = results[i] ?? 'Resultado não encontrado';
+    await fs.promises.writeFile(filePath, result);
     console.log(`📄 Resultado salvo em ${filePath}`);
   }
+
 
 });
