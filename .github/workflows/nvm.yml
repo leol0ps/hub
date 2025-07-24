@@ -61,6 +61,7 @@ jobs:
           cat exercises.txt || echo "(nenhum)"
 
           cp exercises.txt ../problem/
+          cp changed_files.txt ../problem/
 
           # Se nenhum exercício foi detectado, interrompe o workflow
           if [ ! -s filtered.txt ]; then
