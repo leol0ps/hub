@@ -1,6 +1,9 @@
 # HUB
 
-Configurações para ter acesso aos outros repositórios:  
+Este repositório atua como ponto central de integração entre o repositório do professor e o repositório do aluno.  
+Ele só funciona em conjunto com esses dois repositórios, que podem ser encontrados nos seguintes links:  
+- [Repositório do Professor](https://github.com/leol0ps/Repo-modelo-professor)  
+- [Repositório do Aluno](https://github.com/leol0ps/Repo-modelo-aluno)  
 
 Configurações para  utilizar:  
  - crie um teplate deste repositório.
