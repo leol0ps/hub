@@ -14,8 +14,9 @@ Configurações para  utilizar:
    - linha 19: mudar secrets.token para secrets.NOME_DO_SEU_TOKEN
    - linha 30: mude 'leol0ps/backup-tcc' para seu repositório de soluções exemplo 'conta-professor/repositorio-professor'
    - linha 31: mudar secrets.BASE_REPO para secrets.NOME_DO_SEU_TOKEN
-   - linha 137: inserir seu usuario
-   - linha 138: inserir seu email
+   - linha 137: inserir seu usuario (usuario dono do repositório hub)
+   - linha 138: inserir seu email 
    - linha 139: mudar secrets.token para secrets.NOME_DO_SEU_TOKEN
 - Envie aos alunos o convite de colaborador
 
+Obs: Por contas dos workflows a sua conta dona deste repositório receberá várias notificações, é aconselhável utilizar uma conta secundária e desligar as notificações.
