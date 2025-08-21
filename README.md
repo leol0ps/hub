@@ -13,6 +13,6 @@ Configurações para  utilizar:
    - linha 31: mudar secrets.BASE_REPO para secrets.NOME_DO_SEU_TOKEN
    - linha 137: inserir seu usuario
    - linha 138: inserir seu email
-   - 139: mudar secrets.token para secrets.NOME_DO_SEU_TOKEN
+   - linha 139: mudar secrets.token para secrets.NOME_DO_SEU_TOKEN
 
 
